@@ -47,6 +47,11 @@ button {
     color: #F4C300
 }
 
+/* List Styles */
+ul {
+    padding-left: 150px;
+}
+
 /* Image Styles */
 #usernameIcon {
     width: 50px;
@@ -55,4 +60,9 @@ button {
     object-fit: cover;
     margin-right: 8px;
     vertical-align: middle;
+}
+
+#logo {
+    display: block;
+    margin: 0 auto;
 }
