@@ -1,0 +1,58 @@
+/* Page Styles */
+html {
+    background-color: #D9D099;
+    border: 10px double #F4C300
+}
+
+/* Text Styles */
+p {
+    font-family: Lucida Console, serif;
+    font-size: 18px;
+
+    color: #2B2B2B;
+}
+
+.generalText {
+    text-align: center;
+}
+
+.listName {
+    color:#A6192E;
+}
+
+.title {
+    padding: 6px 0px;
+    text-align: center;
+    font-family: Lucida Console, serif;
+
+    color: #2B2B2B;
+    background-color: #00C2A8;
+}
+
+#slogan {
+    text-align: center;
+    font-family: Lucida Console, serif;
+    font-size: 50px;
+}
+
+/* Button Styles */
+#optionButtons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+button {
+    background-color: #A6192E;
+    color: #F4C300
+}
+
+/* Image Styles */
+#usernameIcon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 8px;
+    vertical-align: middle;
+}
