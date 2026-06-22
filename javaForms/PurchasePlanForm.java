@@ -1,16 +1,20 @@
+import java.time.LocalDate;
+import java.util.UUID;
 public class PurchasePlanForm {
-    private String purchaseItem;
+    private String id;
+    private String purchaseTitle;
     private double purchaseAmt;
-    private String purchasePrior;
+    private String purchaseCategory;
     private LocalDate planDate;
-    private boolean purchaseDone;
+    private boolean isPurchased;
 
-    public PurchasePlanForm(String purchaseItem, double purchaseAmt, String purchasePrior, LocalDate planDate) {
-        this.purchaseItem = buyItem;
-        this.purchaseAmt = buyAmt;
-        this.purchasePrior = buyPrior;
-        this.planDate = buyDate;
-        this.purchaseDone = false;
+    public PurchasePlanForm(String purchaseTitle, double purchaseAmt, String purchaseCategory, LocalDate planDate) {
+        this.id = UUID.randomUUID().toString();
+        this.purchaseTitle = title;
+        this.purchaseAmt = amount;
+        this.purchaseCategory = category;
+        this.planDate = purchaseDate;
+        this.isPurchased = false;
     }
 
 }
