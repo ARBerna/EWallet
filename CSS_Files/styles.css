@@ -66,3 +66,42 @@ ul {
     display: block;
     margin: 0 auto;
 }
+
+/* Div Styles */
+.incomeSum {
+    padding-left: 300px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+/* Form Styles */
+form {
+    padding-left: 400px;
+}
+
+label {
+    font-family: Lucida Console, serif;
+    font-size: 18px;
+}
+
+/* Table Styles */
+table {
+    margin: 20px auto;
+}
+
+td {
+    padding: 15px;
+    font-family: Lucida Console, serif;
+    font-size: 16px;
+
+    max-width: 300px;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+th {
+    padding: 15px;
+    font-family: Lucida Console, serif;
+    font-size: 20px;
+}
