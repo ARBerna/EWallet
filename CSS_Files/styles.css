@@ -12,6 +12,10 @@ p {
     color: #2B2B2B;
 }
 
+.moneyAmount {
+    font-size: 25px;
+}
+
 .generalText {
     text-align: center;
 }
@@ -59,10 +63,57 @@ ul {
 /* Image Styles */
 #pawPrints1 {
     position: absolute;
-    top: 300px;
-    left: 900px;
-    width: 500px;
+    top: 350px;
+    left: 1100px;
+    width: 250px;
     transform: rotate(-45deg);
+}
+
+#pawPrints2 {
+    position: absolute;
+    top: 1100px;
+    left: 1100px;
+    width: 300px;
+    transform: rotate(20deg);
+}
+
+#pawPrints3 {
+    position: absolute;
+    top: 1600px;
+    left: 250px;
+    width: 200px;
+    transform: rotate(97deg);
+}
+
+#pawPrints4 {
+    position: absolute;
+    top: 180px;
+    left: 1000px;
+    width: 225px;
+    transform: rotate(-70deg);
+}
+
+#pawPrints5 {
+    position: absolute;
+    top: 315px;
+    left: 100px;
+    width: 125px;
+    transform: rotate(15deg);
+}
+#pawPrints6 {
+    position: absolute;
+    top: 250px;
+    left: 1000px;
+    width: 225px;
+    transform: rotate(-75deg);
+}
+
+#pawPrints7 {
+    position: absolute;
+    top: 325px;
+    left: 100px;
+    width: 150px;
+    transform: rotate(15deg);
 }
 
 #usernameIcon {
