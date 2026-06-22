@@ -20,5 +20,38 @@
             <button id = "mainPageButton" onclick = "window.location.href = '../index.html'"><h2>Main Page</h2></button>
         </div>
     </div>
+
+    <section>
+        <h1 class = "title">Income</h1>
+
+        <div class = "incomeSum">
+            <p class = "listName">Total Amount:</p> 
+            <h3 id = "totalAmount">$0.00</h3>
+        </div>
+
+        <div class = "incomeSum">
+            <p class = "listName">Added This Month:</p>
+            <h3 id = "monthlyIncome">$0.00</h3>
+        </div>
+
+        <div class = "incomeSum">
+            <p class = "listName">This Much Till Goal</p>
+            <h3 id = "tillGoal">$0.00</h3>
+        </div><br><br>
+
+    </section>
+
+    <section>
+        
+        <form action = "/planning" method = "post">
+            <label for = "planningDate">Date:</label>
+            <input type = "date" id = "planningDate" name = "date" required><br><br>
+            
+            <label for = "planningAmount">Amount:</label>
+            <input type = "number" id = "planningAmount" name = "amount" placeholder = "0.00" step = "0.01" required><br><br>
+
+            <button type = "submit">Create Plan</button>
+        </form>
+    </section>
 </body>
 </html>
