@@ -7,7 +7,7 @@ html {
 /* Text Styles */
 p {
     font-family: Lucida Console, serif;
-    font-size: 18px;
+    font-size: 25px;
 
     color: #2B2B2B;
 }
@@ -27,6 +27,10 @@ p {
 
     color: #2B2B2B;
     background-color: #00C2A8;
+}
+
+.currentGoalText {
+    font-size: 30px;
 }
 
 #slogan {
@@ -73,6 +77,15 @@ ul {
     display: flex;
     align-items: center;
     gap: 25px;
+}
+
+#currentGoal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    width: fit-content;
+    margin: 0 auto;
 }
 
 /* Form Styles */
