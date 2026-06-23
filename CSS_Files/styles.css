@@ -1,0 +1,179 @@
+/* Page Styles */
+html {
+    background-color: #D9D099;
+    border: 10px double #F4C300
+}
+
+/* Text Styles */
+p {
+    font-family: Lucida Console, serif;
+    font-size: 25px;
+
+    color: #2B2B2B;
+}
+
+.moneyAmount {
+    font-size: 25px;
+}
+
+.generalText {
+    text-align: center;
+}
+
+.listName {
+    color:#A6192E;
+}
+
+.title {
+    padding: 6px 0px;
+    text-align: center;
+    font-family: Lucida Console, serif;
+
+    color: #2B2B2B;
+    background-color: #00C2A8;
+}
+
+.currentGoalText {
+    font-size: 30px;
+}
+
+#slogan {
+    text-align: center;
+    font-family: Lucida Console, serif;
+    font-size: 50px;
+}
+
+/* Button Styles */
+#optionButtons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+button {
+    background-color: #A6192E;
+    color: #F4C300
+}
+
+/* List Styles */
+ul {
+    padding-left: 150px;
+}
+
+/* Image Styles */
+#pawPrints1 {
+    position: absolute;
+    top: 350px;
+    left: 1100px;
+    width: 250px;
+    transform: rotate(-45deg);
+}
+
+#pawPrints2 {
+    position: absolute;
+    top: 1100px;
+    left: 1100px;
+    width: 300px;
+    transform: rotate(20deg);
+}
+
+#pawPrints3 {
+    position: absolute;
+    top: 1600px;
+    left: 250px;
+    width: 200px;
+    transform: rotate(97deg);
+}
+
+#pawPrints4 {
+    position: absolute;
+    top: 180px;
+    left: 1000px;
+    width: 225px;
+    transform: rotate(-70deg);
+}
+
+#pawPrints5 {
+    position: absolute;
+    top: 315px;
+    left: 100px;
+    width: 125px;
+    transform: rotate(15deg);
+}
+#pawPrints6 {
+    position: absolute;
+    top: 250px;
+    left: 1000px;
+    width: 225px;
+    transform: rotate(-75deg);
+}
+
+#pawPrints7 {
+    position: absolute;
+    top: 325px;
+    left: 100px;
+    width: 150px;
+    transform: rotate(15deg);
+}
+
+#usernameIcon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+#logo {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Div Styles */
+.incomeSum {
+    padding-left: 300px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+#currentGoal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+/* Form Styles */
+form {
+    padding-left: 400px;
+}
+
+label {
+    font-family: Lucida Console, serif;
+    font-size: 18px;
+}
+
+/* Table Styles */
+table {
+    margin: 20px auto;
+}
+
+td {
+    padding: 15px;
+    font-family: Lucida Console, serif;
+    font-size: 16px;
+
+    max-width: 300px;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+th {
+    padding: 15px;
+    font-family: Lucida Console, serif;
+    font-size: 20px;
+}
