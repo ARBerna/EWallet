@@ -90,6 +90,8 @@ form.addEventListener('submit', (e) => {
     const amount = document.getElementById('amount').value;
     const date = document.getElementById('date').value;
     const category = document.getElementById('category').value; 
+
+    const editId = form.dataset.editId;
     if (editId) {
         const updatedForm = {
             id: editId,
@@ -101,6 +103,8 @@ form.addEventListener('submit', (e) => {
         };
         updatedPurchase(editId, updatedForm);
          
+        delete form.dataset.editId;
+        form.querySelector('.btn-submit').innerText = 'Schedule Purchase';
     } else {
         createPurchase(title, amount, category, date);
     }
