@@ -58,7 +58,7 @@
     <section>
         <h1 class = "title">Income Entries</h1>
 
-        <table>
+        <table id = "incomeTable">
             <thead>
                 <tr>
                     <th>Date</th>
@@ -76,13 +76,33 @@
                     <td>$1000.00</td>
                     <td>Got extra hours this week on monday tuesday and wednesday</td>
                     <td>
-                        <button>Edit</button>
-                        <button>Delete</button>
+                        <button id="editBtn">Edit</button>
+                        <button id="deleteBtn">Delete</button>
                     </td>
                 </tr>
             </tbody>
+
+
         </table>
     </section>
+
+    <script>
+    const editButton = document.getElementById('editBtn');
+    const deleteButton = document.getElementById('deleteBtn');
+
+    const container = document.getElementById('incomeTable');
+
+    editButton.addEventListener('click', () => {
+        //const newParagraph = document.createElement('p');
+        //newParagraph.textContent = 'This is a brand new paragraph!';
+        //container.appendChild(newParagraph);
+    });
+
+    deleteButton.addEventListener('click', () => {
+        const row = deleteButton.closest('tr');
+        row.remove();
+    });
+    </script>
 
 </body>
 </html>
