@@ -1,132 +1,132 @@
-
-let planInfo = new Map();
-
+let expenseInfo = new Map();
+const form = document.getElementById('expenseForm');
+const tableBody = document.getElementById('expenseEntriesTableBody');
 
 function syncStorage() {
-    localStorage.setItem('executed_plans', JSON.stringify(getAll()));
+    localStorage.setItem('ewallet_expenses', JSON.stringify(getAllExpenses()));
     renderUI();
 }
 
 function loadStorage() {
-    const stored = localStorage.getItem('executed_plans');
+    const stored = localStorage.getItem('ewallet_expenses');
     if (stored) {
         const rawList = JSON.parse(stored);
-        rawList.forEach(item => planInfo.set(item.id, item));
+        rawList.forEach(item => expenseInfo.set(item.id, item));
     }
 }
 
-
-function createPurchase(purchaseTitle, purchaseAmt, purchaseCategory, planDate, existingId = null) {
-    const newForm = {
-        id: existingId || crypto.randomUUID(), 
-        purchaseTitle: purchaseTitle,
-        purchaseAmt: parseFloat(purchaseAmt),
-        
-        purchaseCategory: purchaseCategory || (purchaseTitle.toLowerCase().includes('vacation') || purchaseTitle.toLowerCase().includes('trip') ? 'fun' : 'Tech'),
-        planDate: planDate, 
+function createExpense(date, source, amount, category, notes, existingId = null) {
+    const record = {
+        id: existingId || crypto.randomUUID(),
+        date: date,
+        source: source,
+        amount: parseFloat(amount),
+        category: category,
+        notes: notes || ""
     };
+    expenseInfo.set(record.id, record);
+    syncStorage();
+}
 
-    if (newForm.id) {
-        planInfo.set(newForm.id, newForm);
+function getAllExpenses() {
+    return Array.from(expenseInfo.values());
+}
+
+function updateExpense(id, updatedRecord) {
+    if (expenseInfo.has(id)) {
+        expenseInfo.set(id, updatedRecord);
         syncStorage();
     }
 }
 
-
-function getAll() {
-    return Array.from(planInfo.values());
-}
-
-
-function updatedPurchase(id, updatedForm) {
-    if (planInfo.has(id)) {
-        planInfo.set(id, updatedForm);
+function deleteExpense(id) {
+    if (expenseInfo.has(id)) {
+        expenseInfo.delete(id);
         syncStorage();
     }
 }
-
-
-function deletePurchase(id) {
-    if (planInfo.has(id)) {
-        planInfo.delete(id);
-        syncStorage();
-    }
-}
-
-
-const form = document.getElementById('purchaseForm');
-const container = document.getElementById('plansContainer');
-const counter = document.getElementById('totalPlansCount');
 
 function renderUI() {
-    const plans = getAll();
-    counter.innerText = `${plans.length} Active Plans`;
+    const list = getAllExpenses();
+            
+    // Calculate financial summary results
+    let totalSum = 0;
+    let currentMonthSum = 0;
+    const currentMonthStr = new Date().toISOString().slice(0, 7); // Format: "YYYY-MM"
 
-    container.innerHTML = plans.map(p => `
-        <div class="purchase-item-card" data-id="${p.id}">
-            <div class="meta-block">
-                <span class="purchase-title">${p.purchaseTitle}</span>
-                <div class="purchase-timeline">
-                    <span class="badge ${p.purchaseCategory.toLowerCase() === 'fun' ? 'badge-fun' : 'badge-tech'}">${p.purchaseCategory}</span>
-                    Plan Date: ${p.planDate}
-                </div>
-            </div>
-            <div class="financial-block">
-                <span class="purchase-cost">$${p.purchaseAmt.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                <div class="btn-action-group">
-                    <button class="btn-icon btn-icon-edit" onclick="editPlan('${p.id}')" title="Edit Plan">✏️</button>
-                    <button class="btn-icon btn-icon-delete" onclick="deletePlan('${p.id}')" title="Delete Plan">🗑️</button>
-                </div>
-            </div>
-        </div>
-    `).join('');
+    tableBody.innerHTML = list.map(e => {
+        totalSum += e.amount;
+        if (e.date.startsWith(currentMonthStr)) {
+            currentMonthSum += e.amount;
+        }
+
+        return `
+            <tr data-id="${e.id}">
+                <td>${e.date}</td>
+                <td>${e.source}</td>
+                <td><span style="font-weight:bold; font-size:0.85em;">[${e.category}]</span></td>
+                <td>$${e.amount.toFixed(2)}</td>
+                <td>${e.notes}</td>
+                <td>
+                    <button onclick="editExpense('${e.id}')">Edit</button>
+                    <button onclick="deleteExpenseRecord('${e.id}')">Delete</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+
+    // Update upper layout display sums
+    document.getElementById('totalAmountDisplay').innerText = `$${totalSum.toFixed(2)}`;
+    document.getElementById('monthAmountDisplay').innerText = `$${currentMonthSum.toFixed(2)}`;
 }
 
-
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const title = document.getElementById('title').value;
-    const amount = document.getElementById('amount').value;
-    const date = document.getElementById('date').value;
-    const category = document.getElementById('category').value; 
-
+form.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+            
+    const date = document.getElementById('expensesDate').value;
+    const source = document.getElementById('expensesSource').value;
+    const amount = document.getElementById('expensesAmount').value;
+    const category = document.getElementById('expensesCategory').value;
+    const notes = document.getElementById('expensesNotes').value;
     const editId = form.dataset.editId;
+
     if (editId) {
-        const updatedForm = {
+        const updatedRecord = {
             id: editId,
-            purchaseTitle: title,
-            purchaseAmt: parseFloat(amount),
-            purchaseCategory: category,
-            planDate: date,
-            isPurchased: false
+            date: date,
+            source: source,
+            amount: parseFloat(amount),
+            category: category,
+            notes: notes
         };
-        updatedPurchase(editId, updatedForm);
-         
+        updateExpense(editId, updatedRecord);
         delete form.dataset.editId;
-        form.querySelector('.btn-submit').innerText = 'Schedule Purchase';
+        document.getElementById('submitBtn').innerText = 'Add Expense';
     } else {
-        createPurchase(title, amount, category, date);
+        createExpense(date, source, amount, category, notes);
     }
 
     form.reset();
 });
 
-window.deletePlan = (id) => {
-    deletePurchase(id);
+window.deleteExpenseRecord = (id) => {
+            deleteExpense(id);
 };
 
-window.editPlan = (id) => {
-    const target = planInfo.get(id);
+window.editExpense = (id) => {
+    const target = expenseInfo.get(id);
     if (!target) return;
 
-    document.getElementById('title').value = target.purchaseTitle;
-    document.getElementById('amount').value = target.purchaseAmt;
-    document.getElementById('date').value = target.planDate;
+    document.getElementById('expensesDate').value = target.date;
+    document.getElementById('expensesSource').value = target.source;
+    document.getElementById('expensesAmount').value = target.amount;
+    document.getElementById('expensesCategory').value = target.category;
+    document.getElementById('expensesNotes').value = target.notes;
 
     form.dataset.editId = id;
-    form.querySelector('.btn-submit').innerText = 'Update Plan';
+    document.getElementById('submitBtn').innerText = 'Update Expense';
 };
 
+// load the App View
 loadStorage();
 renderUI();
