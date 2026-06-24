@@ -89,21 +89,20 @@ form.addEventListener('submit', (e) => {
     const title = document.getElementById('title').value;
     const amount = document.getElementById('amount').value;
     const date = document.getElementById('date').value;
-    const editId = form.dataset.editId; 
+    const category = document.getElementById('category').value; 
     if (editId) {
         const updatedForm = {
             id: editId,
             purchaseTitle: title,
             purchaseAmt: parseFloat(amount),
-            purchaseCategory: title.toLowerCase().includes('vacation') || title.toLowerCase().includes('trip') ? 'fun' : 'Tech',
+            purchaseCategory: category,
             planDate: date,
             isPurchased: false
         };
         updatedPurchase(editId, updatedForm);
-        delete form.dataset.editId;
-        form.querySelector('.btn-submit').innerText = 'Schedule Purchase';
+         
     } else {
-        createPurchase(title, amount, null, date);
+        createPurchase(title, amount, category, date);
     }
 
     form.reset();
