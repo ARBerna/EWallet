@@ -1,18 +1,36 @@
 /* Page Styles */
 html {
     background-color: #A2C3A4;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    padding: 30px 20px;
+    font-family: "Lucida Console", Monaco, monospace; 
+    color: #2B2B2B;
     border: 10px double #525B76; 
+    min-height: calc(100vh - 40px);
+    position: relative;
+    overflow-x: hidden; 
 }
 
 /* Text Styles */
 p {
-    font-family: "Lucida Console", serif; 
-    font-size: 25px;
-    color: #2B2B2B;
+    font-size: 16px; 
+    line-height: 1.6;
+    color: #333333;
+    margin-top: 0;
+    margin-bottom: 16px;
 }
 
 .moneyAmount {
-    font-size: 25px;
+    font-size: 28px; 
+    font-weight: bold;
     margin: 0; 
     color: #2B2B2B;
 }
@@ -22,130 +40,105 @@ p {
 }
 
 .listName {
-    color: #7D928B;
+    color: #525B76; 
+    font-size: 18px;
+    font-weight: bold;
     margin: 0; 
 }
 
 .title {
-    padding: 6px 0px;
+    padding: 12px 20px;
     text-align: center;
-    font-family: "Lucida Console", serif;
-    color: #2B2B2B;
-    background-color: #A2C3A4;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    color: #F7F5F0; 
+    background-color: #525B76;  
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(82, 91, 118, 0.15);
 }
 
 .currentGoalText {
-    font-size: 30px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #525B76;
 }
 
 #slogan {
     text-align: center;
-    font-family: "Lucida Console", serif;
-    font-size: 50px;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 38px;
+    color: #2B2B2B;
+    margin: 20px 0;
 }
 
 /* Button Styles */
 #optionButtons {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 16px;
+    margin: 24px 0;
 }
 
 button {
-    background-color: #7D928B;
-    color: #525B76; 
-    padding: 10px 20px; 
-    font-family: "Lucida Console", serif;
-    font-size: 18px;
+    background-color: #525B76; 
+    color: #F7F5F0; 
+    padding: 12px 24px; 
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 16px;
     font-weight: bold;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    background-color: #434B62; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* List Styles */
 ul {
-    padding-left: 40px; 
+    padding-left: 24px; 
 }
 
 /* Image Styles */
-#pawPrints1 {
+#pawPrints1, #pawPrints2, #pawPrints3, #pawPrints4, #pawPrints5, #pawPrints6, #pawPrints7 {
     position: absolute;
-    top: 350px;
-    left: 80%; 
-    width: 250px;
-    transform: rotate(-45deg);
     z-index: -1; 
-    opacity: 0.3;
+    opacity: 0.15; 
+    pointer-events: none;
 }
 
-#pawPrints2 {
-    position: absolute;
-    top: 1100px;
-    left: 80%;
-    width: 300px;
-    transform: rotate(20deg);
-    z-index: -1;
-    opacity: 0.3;
-}
+#pawPrints1 { top: 350px; left: 85%; width: 200px; transform: rotate(-45deg); }
+#pawPrints2 { top: 1100px; left: 85%; width: 220px; transform: rotate(20deg); }
+#pawPrints3 { top: 1600px; left: 5%; width: 180px; transform: rotate(97deg); }
+#pawPrints4 { top: 180px; left: 80%; width: 180px; transform: rotate(-70deg); }
+#pawPrints5 { top: 315px; left: 2%; width: 110px; transform: rotate(15deg); }
+#pawPrints6 { top: 250px; left: 80%; width: 180px; transform: rotate(-75deg); }
+#pawPrints7 { top: 325px; left: 2%; width: 130px; transform: rotate(15deg); }
 
-#pawPrints3 {
-    position: absolute;
-    top: 1600px;
-    left: 10%;
-    width: 200px;
-    transform: rotate(97deg);
-    z-index: -1;
-    opacity: 0.3;
-}
-
-#pawPrints4 {
-    position: absolute;
-    top: 180px;
-    left: 75%;
-    width: 225px;
-    transform: rotate(-70deg);
-    z-index: -1;
-    opacity: 0.3;
-}
-
-#pawPrints5 {
-    position: absolute;
-    top: 315px;
-    left: 5%;
-    width: 125px;
-    transform: rotate(15deg);
-    z-index: -1;
-    opacity: 0.3;
-}
-
-#pawPrints6 {
-    position: absolute;
-    top: 250px;
-    left: 75%;
-    width: 225px;
-    transform: rotate(-75deg);
-    z-index: -1;
-    opacity: 0.3;
-}
-
-#pawPrints7 {
-    position: absolute;
-    top: 325px;
-    left: 5%;
-    width: 150px;
-    transform: rotate(15deg);
-    z-index: -1;
-    opacity: 0.3;
+@media (max-width: 1024px) {
+    #pawPrints1, #pawPrints2, #pawPrints3, #pawPrints4, #pawPrints5, #pawPrints6, #pawPrints7 {
+        display: none;
+    }
 }
 
 #usernameIcon {
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 8px;
+    margin-right: 10px;
     vertical-align: middle;
+    border: 2px solid #525B76;
 }
 
 #logo {
@@ -156,11 +149,15 @@ ul {
 /* Div Styles */
 .incomeSum {
     max-width: 500px; 
-    margin: 10px auto; 
+    margin: 12px auto; 
+    padding: 16px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between; 
     gap: 25px;
+    background-color: rgba(247, 245, 240, 0.6); 
+    border-radius: 8px;
+    border-left: 5px solid #7D928B; 
 }
 
 #currentGoal {
@@ -170,57 +167,84 @@ ul {
     gap: 25px;
     width: fit-content;
     margin: 0 auto;
+    padding: 16px;
 }
 
 /* Form Styles */
 form {
     max-width: 500px; 
-    margin: 30px auto; 
+    margin: 32px auto; 
     display: flex;
     flex-direction: column; 
+    gap: 16px; 
 }
 
 label {
-    font-family: "Lucida Console", serif;
-    font-size: 18px;
-    margin-bottom: 5px;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 2px;
     color: #2B2B2B;
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
 }
 
 form input, form select, form textarea {
-    padding: 10px;
-    font-family: "Lucida Console", serif;
-    font-size: 16px;
-    border: 1px solid #2B2B2B;
-    border-radius: 4px;
-    background-color: #ffffff;
+    padding: 12px;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 15px;
+    color: #2B2B2B;
+    border: 2px solid #7D928B; 
+    border-radius: 6px;
+    background-color: #F7F5F0;
     width: 100%; 
     box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+form input:focus, form select:focus, form textarea:focus {
+    outline: none;
+    background-color: #ffffff;
+    border-color: #525B76; 
+    box-shadow: 0 0 0 3px rgba(82, 91, 118, 0.15);
 }
 
 /* Table Styles */
 table {
     margin: 40px auto;
-    border-collapse: collapse;
+    border-collapse: separate; 
+    border-spacing: 0;
     width: 90%;
     max-width: 1000px;
+    background-color: #F7F5F0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden; 
+}
+
+th {
+    padding: 16px;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #525B76; 
+    color: #F7F5F0;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 td {
-    padding: 15px;
-    font-family: "Lucida Console", serif;
-    font-size: 16px;
-    border-bottom: 1px solid rgba(43, 43, 43, 0.2); 
+    padding: 16px;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 15px;
+    color: #333333;
+    border-bottom: 1px solid rgba(125, 146, 139, 0.25); 
     max-width: 300px;
     word-wrap: break-word;
     overflow-wrap: anywhere;
 }
 
-th {
-    padding: 15px;
-    font-family: "Lucida Console", serif;
-    font-size: 20px;
-    background-color: #2B2B2B; 
-    color: #D9D099;
-    text-align: left;
+table tr:last-child td {
+    border-bottom: none; 
 }
