@@ -78,8 +78,8 @@
                     <td>1000.00</td>
                     <td>Got extra hours this week on monday tuesday and wednesday</td>
                     <td>
-                        <button id="editBtn">Edit</button>
-                        <button id="deleteBtn">Delete</button>
+                        <button class="editBtn">Edit</button>
+                        <button class="deleteBtn">Delete</button>
                     </td>
                 </tr>
             </tbody>
@@ -94,9 +94,12 @@
     const addButton = document.getElementById('addBtn');
     let editingRow = null;
 
-    incomeEntries.addEventListener('click', (event) => {
+    incomeEntries.addEventListener('click', (event) => 
+    {
         const target = event.target;
-        if (target.classList.contains('editBtn')) {
+        
+        if (target.classList.contains('editBtn')) 
+        {
             const row = target.closest('tr');
             const dateCell = row.cells[0];
             const sourceCell = row.cells[1];
