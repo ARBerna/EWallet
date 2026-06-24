@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Purchase Planning</title>
+   
+    <link rel="stylesheet" href="/CSS_Files/purchase-plan.css">
+</head>
+<body>
+
+    <div class="purchase-plan-wrapper">
+        
+        <!-- Data Entry Form -->
+        <aside class="plan-form-card">
+            <h2>Schedule New Purchase Plan</h2>
+            <form id="purchasePlanForm" onsubmit="event.preventDefault();">
+                <div class="form-group">
+                    <label for="title">Purchase Goal</label>
+                    <input type="text" id="title" class="form-input" placeholder="e.g., MacBook Pro Upgrade" required>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Plan Budget ($)</label>
+                    <input type="number" id="amount" class="form-input" placeholder="0.00" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="date">Plan Execution Date</label>
+                    <input type="date" id="date" class="form-input" required>
+                </div>
+                <button type="submit" class="btn-submit">Schedule Purchase</button>
+            </form>
+        </aside>
+
+        <!-- Visual List Display -->
+        <main class="plan-list-section">
+            <div class="plan-list-header">
+                <h2>Upcoming Plans</h2>
+                <span class="plan-counter" id="totalPlansCount">2 Active Plans</span>
+            </div>
+
+            <div id="plansContainer">
+                <!-- Card 1 -->
+                <div class="purchase-item-card">
+                    <div class="meta-block">
+                        <span class="purchase-title">Pixel 10 Pro Upgrade</span>
+                        <div class="purchase-timeline">
+                            <span class="badge badge-tech">Tech</span>
+                            Plan Date: Jan 01, 2027
+                        </div>
+                    </div>
+                    <div class="financial-block">
+                        <span class="purchase-cost">$1,499.00</span>
+                        <div class="btn-action-group">
+                            <button class="btn-icon btn-icon-edit" title="Edit Plan">✏️</button>
+                            <button class="btn-icon btn-icon-delete" title="Delete Plan">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="purchase-item-card">
+                    <div class="meta-block">
+                        <span class="purchase-title">Singapore Vacation</span>
+                        <div class="purchase-timeline">
+                            <span class="badge badge-leisure">Leisure</span>
+                            Plan Date: Feb 25, 2027
+                        </div>
+                    </div>
+                    <div class="financial-block">
+                        <span class="purchase-cost">$3,400.00</span>
+                        <div class="btn-action-group">
+                            <button class="btn-icon btn-icon-edit" title="Edit Plan">✏️</button>
+                            <button class="btn-icon btn-icon-delete" title="Delete Plan">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+    </div>
+
+</body>
+</html>
