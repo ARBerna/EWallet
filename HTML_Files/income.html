@@ -37,7 +37,9 @@
             <h3 class = "moneyAmount">$0.00</h3>
         </div><br><br>
 
-        <form action = "/income" method = "post">
+        <!-- <form action = "/income" method = "post"> -->
+
+        <form action = "javascript:submitForm()" method = "post">
             <label for = "incomeDate">Date:</label>
             <input type = "date" id = "incomeDate" name = "date" required><br><br>
             
@@ -51,14 +53,14 @@
             <label for = "incomeNotes">Notes:</label>
             <textarea id = "incomeNotes" name = "notes" placeholder = "Additional notes"></textarea><br><br>
 
-            <button type = "submit">Add Income</button>
+            <button type = "submit" id = "addBtn">Add Income</button>
         </form>
     </section>
 
     <section>
         <h1 class = "title">Income Entries</h1>
 
-        <table>
+        <table id = "incomeTable">
             <thead>
                 <tr>
                     <th>Date</th>
@@ -73,16 +75,89 @@
                 <tr>
                     <td>2026-06-22</td>
                     <td>Paycheck</td>
-                    <td>$1000.00</td>
+                    <td>1000.00</td>
                     <td>Got extra hours this week on monday tuesday and wednesday</td>
                     <td>
-                        <button>Edit</button>
-                        <button>Delete</button>
+                        <button class="editBtn">Edit</button>
+                        <button class="deleteBtn">Delete</button>
                     </td>
                 </tr>
             </tbody>
+
+
         </table>
     </section>
+
+    <script type="text/javascript">
+    
+    const incomeEntries = document.getElementById('incomeEntries');
+    const addButton = document.getElementById('addBtn');
+    let editingRow = null;
+
+    incomeEntries.addEventListener('click', (event) => 
+    {
+        const target = event.target;
+        
+        if (target.classList.contains('editBtn')) 
+        {
+            const row = target.closest('tr');
+            const dateCell = row.cells[0];
+            const sourceCell = row.cells[1];
+            const amountCell = row.cells[2];
+            const notesCell = row.cells[3];
+
+            document.getElementById('incomeDate').value = dateCell.textContent;
+            document.getElementById('incomeSource').value = sourceCell.textContent;
+            document.getElementById('incomeAmount').value = amountCell.textContent;
+            document.getElementById('incomeNotes').value = notesCell.textContent;
+
+            addButton.textContent = 'Update Income';
+            editingRow = row;
+            row.remove();
+        }
+
+        if (target.classList.contains('deleteBtn')) {
+            const row = target.closest('tr');
+            row.remove();
+        }
+    });
+
+    function submitForm() {
+        const date = document.getElementById('incomeDate').value;
+        const source = document.getElementById('incomeSource').value;
+        const amount = document.getElementById('incomeAmount').value;
+        const notes = document.getElementById('incomeNotes').value;
+
+        if (!date || !source || !amount) {
+            alert('Please complete date, source, and amount fields.');
+            return false;
+        }
+
+        const tbody = document.getElementById('incomeEntries');
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${date}</td>
+            <td>${source}</td>
+            <td>${Number(amount).toFixed(2)}</td>
+            <td>${notes}</td>
+            <td>
+                <button class="editBtn">Edit</button>
+                <button class="deleteBtn">Delete</button>
+            </td>
+        `;
+
+        tbody.appendChild(newRow);
+        editingRow = null;
+        addButton.textContent = 'Add Income';
+        document.getElementById('incomeDate').value = '';
+        document.getElementById('incomeSource').value = '';
+        document.getElementById('incomeAmount').value = '';
+        document.getElementById('incomeNotes').value = '';
+
+        return false;
+    }
+
+    </script>
 
 </body>
 </html>
