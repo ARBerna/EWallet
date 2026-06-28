@@ -1,8 +1,8 @@
 export const appState = {
-    balance: 0,
+    balance: 500,
     transactions: [],
-    income: 0,
-    expenses: 0
+    income: 50,
+    expenses: 80
 };
 
 //use import on each js file that uses this:
