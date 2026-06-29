@@ -15,7 +15,7 @@ function initExpensesFeature() {
     const form = document.getElementById('expenseForm');
     const tableBody = document.getElementById('expenseEntriesTableBody');
 
-    AppState.loadExpenses();
+    appState.loadExpenses();
     renderExpenseUI();
 
     form.addEventListener('submit', (ev) => {
@@ -37,7 +37,7 @@ function initExpensesFeature() {
             expenseInfo.set(id, { id, date, source, amount, category, notes });
         }
 
-        AppState.syncExpenses();
+        appState.syncExpenses();
         renderExpenseUI();
         form.reset();
     });
@@ -51,7 +51,7 @@ function initExpensesFeature() {
 
         if (action === 'delete') {
             expenseInfo.delete(id);
-            AppState.syncExpenses();
+            appState.syncExpenses();
             renderExpenseUI();
         } else if (action === 'edit') {
             const target = expenseInfo.get(id);
@@ -104,8 +104,8 @@ function initExpensesFeature() {
 function initPlanningFeature() {
     const form = document.getElementById('planningForm');
     
-    AppState.loadPlanning();
-    AppState.loadExpenses();
+    appState.loadPlanning();
+    appState.loadExpenses();
     renderPlanningUI();
 
     form.addEventListener('submit', (ev) => {
@@ -116,7 +116,7 @@ function initPlanningFeature() {
         const id = crypto.randomUUID();
 
         planningInfo.set(id, { id, date, amount });
-        AppState.syncPlanning();
+        appState.syncPlanning();
         renderPlanningUI();
         form.reset();
     });
