@@ -28,7 +28,8 @@ p {
     margin-bottom: 16px;
 }
 
-.moneyAmount {
+/* Added .money-amount to match new layout bindings */
+.moneyAmount, .money-amount {
     font-size: 28px; 
     font-weight: bold;
     margin: 0; 
@@ -39,7 +40,8 @@ p {
     text-align: center;
 }
 
-.listName {
+/* Added .summary-label to match new layout bindings */
+.listName, .summary-label {
     color: #525B76; 
     font-size: 18px;
     font-weight: bold;
@@ -80,7 +82,8 @@ p {
     margin: 24px 0;
 }
 
-button {
+/* Added .btn to style semantic anchor tags exactly like buttons */
+button, .btn {
     background-color: #525B76; 
     color: #F7F5F0; 
     padding: 12px 24px; 
@@ -92,14 +95,18 @@ button {
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    text-decoration: none; /* Keeps links from having underlines */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-button:hover {
+button:hover, .btn:hover {
     background-color: #434B62; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-button:active {
+button:active, .btn:active {
     transform: translateY(1px);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
@@ -147,7 +154,8 @@ ul {
 }
 
 /* Div Styles */
-.incomeSum {
+/* Added .expense-sum and .planning-box so they share the exact original styles */
+.incomeSum, .expense-sum, .planning-box {
     max-width: 500px; 
     margin: 12px auto; 
     padding: 16px 20px;
@@ -158,6 +166,7 @@ ul {
     background-color: rgba(247, 245, 240, 0.6); 
     border-radius: 8px;
     border-left: 5px solid #7D928B; 
+    box-sizing: border-box; /* Prevents padding from changing box width */
 }
 
 #currentGoal {
@@ -171,12 +180,19 @@ ul {
 }
 
 /* Form Styles */
-form {
+form, #expenseForm, #planningForm {
     max-width: 500px; 
     margin: 32px auto; 
     display: flex;
     flex-direction: column; 
     gap: 16px; 
+}
+
+/* Added layout rule for form groups to display cleanly without <br> elements */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 label {
@@ -247,4 +263,11 @@ td {
 
 table tr:last-child td {
     border-bottom: none; 
+}
+
+/* Ensures dynamic action buttons inside table match row heights smoothly */
+table td button {
+    padding: 6px 12px;
+    font-size: 13px;
+    margin-right: 4px;
 }
