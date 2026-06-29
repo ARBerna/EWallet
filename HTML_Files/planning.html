@@ -1,65 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel = "stylesheet" href = "../CSS_Files/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../CSS_Files/styles.css">
     <title>EWallet Planning</title>
 </head>
 <body>
-    <div id = "intro">
-        <h1 class = "title">EWallet Planning</h1>
+    <header id="intro">
+        <h1 class="title">EWallet Planning</h1>
 
-        <h2>
-            <img src = "../Pictures/usernameIcon.png" alt = "Username Icon" id = "usernameIcon">
-            (Username)
-        </h2>
-
-        <div id = "optionButtons">
-            <button id = "incomeButton" onclick = "window.location.href = 'income.html'"><h2>Income</h2></button>
-            <button id = "expenseButton" onclick = "window.location.href = 'expenses.html'"><h2>Expenses</h2></button>
-            <button id = "mainPageButton" onclick = "window.location.href = '../index.html'"><h2>Main Page</h2></button>
-        </div>
-    </div>
-
-    <section>
-        <h1 class = "title">Planning</h1>
-
-        <img src = "../Pictures/PawPrints.png" alt = "Paw Prints" id = "pawPrints6">
-        <img src = "../Pictures/PawPrints.png" alt = "Paw Prints" id = "pawPrints7">
-
-        <div id = "currentGoal">
-            <p class = "currentGoalText">Current Goal:</p>
-            <h3 class = "currentGoalText">$500.00</h3>
+        <div class="user-profile">
+            <img src="../Pictures/usernameIcon.png" alt="User Profile Icon" id="usernameIcon">
+            <span class="username">(Username)</span>
         </div>
 
-        <div class = "incomeSum">
-            <p class = "listName">Total Amount:</p> 
-            <h3 class = "moneyAmount">$0.00</h3>
-        </div>
+        <nav id="optionButtons" aria-label="Main Navigation">
+            <a href="income.html" class="btn" id="incomeButton">Income</a>
+            <a href="expenses.html" class="btn" id="expenseButton">Expenses</a>
+            <a href="../index.html" class="btn" id="mainPageButton">Main Page</a>
+        </nav>
+    </header>
 
-        <div class = "incomeSum">
-            <p class = "listName">Added This Month:</p>
-            <h3 class = "moneyAmount">$0.00</h3>
-        </div>
+    <main>
+        <section id="planningSummary" aria-labelledby="planningHeading">
+            <h2 class="title" id="planningHeading">Planning</h2>
+            <img src="../Pictures/PawPrints.png" alt="" role="presentation" id="pawPrints6">
+            <img src="../Pictures/PawPrints.png" alt="" role="presentation" id="pawPrints7">
 
-        <div class = "incomeSum">
-            <p class = "listName">This Much Till Goal</p>
-            <h3 class = "moneyAmount">$0.00</h3>
-        </div><br><br>
+            <div class="summary-container">
+                <div id="currentGoal" class="planning-box">
+                    <p class="summary-label">Current Goal:</p>
+                    <h3 class="money-amount" id="currentGoalDisplay">$500.00</h3>
+                </div>
 
-    </section>
+                <div class="planning-box">
+                    <p class="summary-label">Total Amount:</p> 
+                    <h3 class="money-amount" id="totalPlanningAmountDisplay">$0.00</h3>
+                </div>
 
-    <section>
-        
-        <form action = "/planning" method = "post">
-            <label for = "planningDate">Date:</label>
-            <input type = "date" id = "planningDate" name = "date" required><br><br>
+                <div class="planning-box">
+                    <p class="summary-label">Added This Month:</p>
+                    <h3 class="money-amount" id="monthPlanningAmountDisplay">$0.00</h3>
+                </div>
+
+                <div class="planning-box">
+                    <p class="summary-label">Remaining Until Goal:</p>
+                    <h3 class="money-amount" id="remainingTillGoalDisplay">$0.00</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="planningFormSection" aria-labelledby="formHeading">
+            <h2 class="title" id="formHeading">Create New Plan</h2>
             
-            <label for = "planningAmount">Amount:</label>
-            <input type = "number" id = "planningAmount" name = "amount" placeholder = "0.00" step = "0.01" required><br><br>
+            <form id="planningForm">
+                <div class="form-group">
+                    <label for="planningDate">Date:</label>
+                    <input type="date" id="planningDate" name="date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="planningAmount">Amount:</label>
+                    <input type="number" id="planningAmount" name="amount" placeholder="0.00" step="0.01" min="0" required>
+                </div>
 
-            <button type = "submit">Create Plan</button>
-        </form>
-    </section>
+                <button type="submit" id="submitPlanBtn">Create Plan</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="./variables.js"></script>
+    <script src="./app.js"></script>
 </body>
 </html>
