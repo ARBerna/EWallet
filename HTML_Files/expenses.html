@@ -1,84 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel = "stylesheet" href = "../CSS_Files/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../CSS_Files/styles.css">
     <title>EWallet Expenses</title>
 </head>
 <body>
-    <div id = "intro">
-        <h1 class = "title">EWallet Expenses</h1>
+    <header id="intro">
+        <h1 class="title">EWallet Expenses</h1>
 
-        <h2>
-            <img src = "../Pictures/usernameIcon.png" alt = "Username Icon" id = "usernameIcon">
-            (Username)
-        </h2>
-
-        <div id = "optionButtons">
-            <button id = "incomeButton" onclick = "window.location.href = 'income.html'"><h2>Income</h2></button>
-            <button id = "mainPageButton" onclick = "window.location.href = '../index.html'"><h2>Main Page</h2></button>
-            <button id = "planningButton" onclick = "window.location.href = 'planning.html'"><h2>Planning</h2></button>
-        </div>
-    </div>
-
-    <section>
-        <h1 class = "title">Expenses</h1>
-
-        <img src = "../Pictures/PawPrints.png" alt = "Paw Prints" id = "pawPrints1">
-        <img src = "../Pictures/PawPrints.png" alt = "Paw Prints" id = "pawPrints2">
-
-        <div class = "incomeSum">
-            <p class = "listName">Total Amount:</p> 
-            <h3 class = "moneyAmount" id = "totalAmountDisplay">$0.00</h3>
+        <div class="user-profile">
+            <img src="../Pictures/usernameIcon.png" alt="User Profile Icon" id="usernameIcon">
+            <span class="username">(Username)</span>
         </div>
 
-        <div class = "incomeSum">
-            <p class = "listName">Expenses For the Month:</p>
-            <h3 class = "moneyAmount" id = "monthAmountDisplay">$0.00</h3>
-        </div><br><br>
+        <nav id="optionButtons" aria-label="Main Navigation">
+            <a href="income.html" class="btn" id="incomeButton">Income</a>
+            <a href="../index.html" class="btn" id="mainPageButton">Main Page</a>
+            <a href="planning.html" class="btn" id="planningButton">Planning</a>
+        </nav>
+    </header>
 
-        <form id = "expenseForm" onsubmit = "event.preventDefault();">
-            <label for = "expensesDate">Date:</label>
-            <input type = "date" id = "expensesDate" name = "date" required><br><br>
-            
-            <label for = "expensesSource">Source:</label>
-            <input type = "text" id = "expensesSource" name = "source" placeholder = "Bills, Gift, etc." required><br><br>
+    <main>
+        <section id="expenseSummary" aria-labelledby="expensesHeading">
+            <h2 class="title" id="expensesHeading">Expenses</h2>
+            <img src="../Pictures/PawPrints.png" alt="" role="presentation" id="pawPrints1">
+            <img src="../Pictures/PawPrints.png" alt="" role="presentation" id="pawPrints2">
 
-            <label for = "expensesAmount">Amount:</label>
-            <input type = "number" id = "expensesAmount" name = "amount" placeholder = "0.00" step = "0.01" required><br><br>
+            <div class="summary-container">
+                <div class="expense-sum">
+                    <p class="summary-label">Total Amount:</p> 
+                    <h3 class="money-amount" id="totalAmountDisplay">$0.00</h3>
+                </div>
 
-            <label for = "expensesCategory">Category:</label>
-            <select id = "expensesCategory" name = "category" required style="padding: 4px; border-radius: 4px;">
-                <option value="Tech">Tech</option>
-                <option value="Fun">Fun</option>
-                <option value="General">General</option>
-            </select><br><br>
+                <div class="expense-sum">
+                    <p class="summary-label">Expenses For the Month:</p>
+                    <h3 class="money-amount" id="monthAmountDisplay">$0.00</h3>
+                </div>
+            </div>
 
-            <label for = "expensesNotes">Notes:</label>
-            <textarea id = "expensesNotes" name = "notes" placeholder = "Additional notes"></textarea><br><br>
+            <form id="expenseForm">
+                <div class="form-group">
+                    <label for="expensesDate">Date:</label>
+                    <input type="date" id="expensesDate" name="date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="expensesSource">Source:</label>
+                    <input type="text" id="expensesSource" name="source" placeholder="Bills, Gift, etc." required>
+                </div>
 
-            <button type = "submit" id = "submitBtn">Add Expense</button>
-        </form>
-    </section>
+                <div class="form-group">
+                    <label for="expensesAmount">Amount:</label>
+                    <input type="number" id="expensesAmount" name="amount" placeholder="0.00" step="0.01" min="0" required>
+                </div>
 
-    <section>
-        <h1 class = "title">Expense Entries</h1>
+                <div class="form-group">
+                    <label for="expensesCategory">Category:</label>
+                    <select id="expensesCategory" name="category" required>
+                        <option value="Tech">Tech</option>
+                        <option value="Fun">Fun</option>
+                        <option value="General">General</option>
+                    </select>
+                </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Source</th>
-                    <th>Category</th>
-                    <th>Amount</th>
-                    <th>Notes</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
+                <div class="form-group">
+                    <label for="expensesNotes">Notes:</label>
+                    <textarea id="expensesNotes" name="notes" placeholder="Additional notes"></textarea>
+                </div>
 
-            <tbody id = "expenseEntriesTableBody"></tbody>
-        </table>
-    </section>
-    <script src="/app.js"></script>
+                <button type="submit" id="submitBtn">Add Expense</button>
+            </form>
+        </section>
+
+        <section id="expenseEntries" aria-labelledby="entriesHeading">
+            <h2 class="title" id="entriesHeading">Expense Entries</h2>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Source</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenseEntriesTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    
+    <script src="./variables.js"></script>
+    <script src="./app.js"></script>
 </body>
 </html>
