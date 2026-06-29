@@ -7,6 +7,7 @@
     <title>EWallet Expenses</title>
 </head>
 <body>
+
     <header id="intro">
         <h1 class="title">EWallet Expenses</h1>
 
@@ -15,6 +16,7 @@
             <span class="username">(Username)</span>
         </div>
 
+        <!-- Navigation container -->
         <nav id="optionButtons" aria-label="Main Navigation">
             <a href="income.html" class="btn" id="incomeButton">Income</a>
             <a href="../index.html" class="btn" id="mainPageButton">Main Page</a>
@@ -25,6 +27,7 @@
     <main>
         <section id="expenseSummary" aria-labelledby="expensesHeading">
             <h2 class="title" id="expensesHeading">Expenses</h2>
+
             <img src="../Pictures/PawPrints.png" alt="" role="presentation" id="pawPrints1">
             <img src="../Pictures/PawPrints.png" alt="" role="presentation" id="pawPrints2">
 
@@ -40,6 +43,7 @@
                 </div>
             </div>
 
+            <!-- Form handles additions natively via client event loops inside app.js -->
             <form id="expenseForm">
                 <div class="form-group">
                     <label for="expensesDate">Date:</label>
@@ -74,6 +78,7 @@
             </form>
         </section>
 
+        <!-- Section: Responsive interactive entry workspace data grid -->
         <section id="expenseEntries" aria-labelledby="entriesHeading">
             <h2 class="title" id="entriesHeading">Expense Entries</h2>
 
@@ -89,13 +94,15 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="expenseEntriesTableBody"></tbody>
+                    <tbody id="expenseEntriesTableBody">
+                        <!-- Dynamic elements populated natively via module mapping strings -->
+                    </tbody>
                 </table>
             </div>
         </section>
     </main>
 
-    <script src="../variables.js"></script>
-    <script src="../app.js"></script>
+    <!-- Unified modular client initialization entry target link point -->
+    <script type="module" src="../app.js"></script>
 </body>
 </html>

@@ -15,6 +15,7 @@
             <span class="username">(Username)</span>
         </div>
 
+        <!-- Navigation container -->
         <nav id="optionButtons" aria-label="Main Navigation">
             <a href="income.html" class="btn" id="incomeButton">Income</a>
             <a href="expenses.html" class="btn" id="expenseButton">Expenses</a>
@@ -25,6 +26,7 @@
     <main>
         <section id="planningSummary" aria-labelledby="planningHeading">
             <h2 class="title" id="planningHeading">Planning</h2>
+
             <img src="../Pictures/PawPrints.png" alt="" role="presentation" id="pawPrints6">
             <img src="../Pictures/PawPrints.png" alt="" role="presentation" id="pawPrints7">
 
@@ -35,7 +37,7 @@
                 </div>
 
                 <div class="planning-box">
-                    <p class="summary-label">Total Amount:</p> 
+                    <p class="summary-label">Total Planned:</p> 
                     <h3 class="money-amount" id="totalPlanningAmountDisplay">$0.00</h3>
                 </div>
 
@@ -51,26 +53,51 @@
             </div>
         </section>
 
+        <!-- Create / Modify Planned Purchases -->
         <section id="planningFormSection" aria-labelledby="formHeading">
-            <h2 class="title" id="formHeading">Create New Plan</h2>
+            <h2 class="title" id="formHeading">Plan Future Purchase</h2>
             
             <form id="planningForm">
                 <div class="form-group">
-                    <label for="planningDate">Date:</label>
+                    <label for="planningDate">Target Date:</label>
                     <input type="date" id="planningDate" name="date" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="planningAmount">Amount:</label>
+                    <label for="planningDescription">Description / Item:</label>
+                    <input type="text" id="planningDescription" name="description" placeholder="Laptop, Car Insurance, etc." required>
+                </div>
+
+                <div class="form-group">
+                    <label for="planningAmount">Estimated Amount:</label>
                     <input type="number" id="planningAmount" name="amount" placeholder="0.00" step="0.01" min="0" required>
                 </div>
 
                 <button type="submit" id="submitPlanBtn">Create Plan</button>
             </form>
         </section>
+
+        <!-- View / Modify / Delete Planned Purchases Table -->
+        <section id="planningEntries" aria-labelledby="entriesHeading">
+            <h2 class="title" id="entriesHeading">Planned Future Purchases</h2>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Target Date</th>
+                            <th>Description</th>
+                            <th>Estimated Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="planningEntriesTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
-    <script src="../variables.js"></script>
-    <script src="../app.js"></script>
+    <script type="module" src="../app.js"></script>
 </body>
 </html>

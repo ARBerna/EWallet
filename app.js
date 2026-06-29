@@ -1,3 +1,4 @@
+import { appState } from './variables.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const hasExpenseView = !!document.getElementById('expenseForm');
@@ -10,17 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// EXPENSE FEATURE CONTROLLER
 function initExpensesFeature() {
     const form = document.getElementById('expenseForm');
     const tableBody = document.getElementById('expenseEntriesTableBody');
-
+    
     appState.loadExpenses();
     renderExpenseUI();
 
     form.addEventListener('submit', (ev) => {
         ev.preventDefault();
-        
         const date = document.getElementById('expensesDate').value;
         const source = document.getElementById('expensesSource').value;
         const amount = parseFloat(document.getElementById('expensesAmount').value);
@@ -29,12 +28,15 @@ function initExpensesFeature() {
         const editId = form.dataset.editId;
 
         if (editId) {
-            expenseInfo.set(editId, { id: editId, date, source, amount, category, notes });
+            const idx = appState.transactions.findIndex(t => t.id === editId && t.type === 'expense');
+            if (idx !== -1) {
+                appState.transactions[idx] = { id: editId, type: 'expense', date, source, amount, category, notes };
+            }
             delete form.dataset.editId;
             document.getElementById('submitBtn').innerText = 'Add Expense';
         } else {
             const id = crypto.randomUUID();
-            expenseInfo.set(id, { id, date, source, amount, category, notes });
+            appState.transactions.push({ id, type: 'expense', date, source, amount, category, notes });
         }
 
         appState.syncExpenses();
@@ -50,11 +52,11 @@ function initExpensesFeature() {
         const id = actionBtn.dataset.id;
 
         if (action === 'delete') {
-            expenseInfo.delete(id);
+            appState.transactions = appState.transactions.filter(t => t.id !== id);
             appState.syncExpenses();
             renderExpenseUI();
         } else if (action === 'edit') {
-            const target = expenseInfo.get(id);
+            const target = appState.transactions.find(t => t.id === id);
             if (!target) return;
 
             document.getElementById('expensesDate').value = target.date;
@@ -69,17 +71,16 @@ function initExpensesFeature() {
     });
 
     function renderExpenseUI() {
-        const list = Array.from(expenseInfo.values());
+        const expenses = appState.transactions.filter(t => t.type === 'expense');
         let totalSum = 0;
         let currentMonthSum = 0;
-        const currentMonthStr = new Date().toISOString().slice(0, 7); // Format: "YYYY-MM"
+        const currentMonthStr = new Date().toISOString().slice(0, 7);
 
-        tableBody.innerHTML = list.map(e => {
+        tableBody.innerHTML = expenses.map(e => {
             totalSum += e.amount;
             if (e.date.startsWith(currentMonthStr)) {
                 currentMonthSum += e.amount;
             }
-
             return `
                 <tr data-id="${e.id}">
                     <td>${e.date}</td>
@@ -95,46 +96,121 @@ function initExpensesFeature() {
             `;
         }).join('');
 
-        document.getElementById('totalAmountDisplay').innerText = `$${totalSum.toFixed(2)}`;
-        document.getElementById('monthAmountDisplay').innerText = `$${currentMonthSum.toFixed(2)}`;
+        appState.expenses = totalSum;
+        const totalAmountEl = document.getElementById('totalAmountDisplay');
+        const monthAmountEl = document.getElementById('monthAmountDisplay');
+
+        totalAmountEl.innerText = `$${totalSum.toFixed(2)}`;
+        monthAmountEl.innerText = `$${currentMonthSum.toFixed(2)}`;
+
+        const monthlyBudgetCap = 400.00;
+        if (currentMonthSum > monthlyBudgetCap) {
+            monthAmountEl.style.color = "#d9534f";
+            monthAmountEl.innerText += " (Over Budget)";
+        } else if (currentMonthSum >= monthlyBudgetCap * 0.80) {
+            monthAmountEl.style.color = "#f0ad4e";
+            monthAmountEl.innerText += " (High Spending)";
+        } else {
+            monthAmountEl.style.color = "";
+            monthAmountEl.innerText += " (Under Budget)";
+        }
     }
 }
 
-// PLANNING FEATURE CONTROLLER
 function initPlanningFeature() {
     const form = document.getElementById('planningForm');
+    const tableBody = document.getElementById('planningEntriesTableBody');
     
-    appState.loadPlanning();
-    appState.loadExpenses();
+    appState.loadExpenses(); 
     renderPlanningUI();
 
     form.addEventListener('submit', (ev) => {
         ev.preventDefault();
-        
         const date = document.getElementById('planningDate').value;
+        const description = document.getElementById('planningDescription').value;
         const amount = parseFloat(document.getElementById('planningAmount').value);
-        const id = crypto.randomUUID();
+        const editId = form.dataset.editId;
 
-        planningInfo.set(id, { id, date, amount });
-        appState.syncPlanning();
+        if (editId) {
+            const idx = appState.transactions.findIndex(t => t.id === editId && t.type === 'plan');
+            if (idx !== -1) {
+                appState.transactions[idx] = { id: editId, type: 'plan', date, description, amount };
+            }
+            delete form.dataset.editId;
+            document.getElementById('submitPlanBtn').innerText = 'Create Plan';
+        } else {
+            const id = crypto.randomUUID();
+            appState.transactions.push({ id, type: 'plan', date, description, amount });
+        }
+        
+        appState.syncExpenses();
         renderPlanningUI();
         form.reset();
     });
 
+    tableBody.addEventListener('click', (ev) => {
+        const actionBtn = ev.target.closest('button[data-action]');
+        if (!actionBtn) return;
+
+        const action = actionBtn.dataset.action;
+        const id = actionBtn.dataset.id;
+
+        if (action === 'delete') {
+            appState.transactions = appState.transactions.filter(t => t.id !== id);
+            appState.syncExpenses();
+            renderPlanningUI();
+        } else if (action === 'edit') {
+            const target = appState.transactions.find(t => t.id === id);
+            if (!target) return;
+
+            document.getElementById('planningDate').value = target.date;
+            document.getElementById('planningDescription').value = target.description;
+            document.getElementById('planningAmount').value = target.amount;
+
+            form.dataset.editId = id;
+            document.getElementById('submitPlanBtn').innerText = 'Update Plan';
+        }
+    });
+
     function renderPlanningUI() {
-        const plans = Array.from(planningInfo.values());
-        const expenses = Array.from(expenseInfo.values());
+        const plans = appState.transactions.filter(t => t.type === 'plan');
+        const expenses = appState.transactions.filter(t => t.type === 'expense');
         const currentMonthStr = new Date().toISOString().slice(0, 7);
 
-        // Calculate Plan Goals
         let totalPlanned = plans.reduce((sum, p) => sum + p.amount, 0);
         let monthPlanned = plans.filter(p => p.date.startsWith(currentMonthStr)).reduce((sum, p) => sum + p.amount, 0);
         
+        const baseGoalTarget = 500.00; 
         let totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
-        let remainingValue = CONFIG_BASELINES.DEFAULT_GOAL_TARGET - totalExpenses;
+        let remainingValue = baseGoalTarget - totalExpenses;
+
+        tableBody.innerHTML = plans.map(p => `
+            <tr data-id="${p.id}">
+                <td>${p.date}</td>
+                <td>${p.description}</td>
+                <td>$${p.amount.toFixed(2)}</td>
+                <td>
+                    <button data-action="edit" data-id="${p.id}">Edit</button>
+                    <button data-action="delete" data-id="${p.id}">Delete</button>
+                </td>
+            </tr>
+        `).join('');
 
         document.getElementById('totalPlanningAmountDisplay').innerText = `$${totalPlanned.toFixed(2)}`;
         document.getElementById('monthPlanningAmountDisplay').innerText = `$${monthPlanned.toFixed(2)}`;
-        document.getElementById('remainingTillGoalDisplay').innerText = `$${Math.max(0, remainingValue).toFixed(2)}`;
+        
+        const remainingEl = document.getElementById('remainingTillGoalDisplay');
+        remainingEl.innerText = `$${remainingValue.toFixed(2)}`;
+
+        if (remainingValue < 0) {
+            remainingEl.style.color = "#d9534f";
+            remainingEl.innerText += " (Over Goal Limit)";
+        } else if (remainingValue <= 100) {
+            remainingEl.style.color = "#f0ad4e";
+            remainingEl.innerText += " (Approaching Goal Limit)";
+        } else {
+            remainingEl.style.color = "";
+            remainingEl.innerText += " (Within Budget Goal)";
+        }
     }
 }

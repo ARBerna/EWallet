@@ -28,7 +28,6 @@ p {
     margin-bottom: 16px;
 }
 
-/* Added .money-amount to match new layout bindings */
 .moneyAmount, .money-amount {
     font-size: 28px; 
     font-weight: bold;
@@ -40,7 +39,6 @@ p {
     text-align: center;
 }
 
-/* Added .summary-label to match new layout bindings */
 .listName, .summary-label {
     color: #525B76; 
     font-size: 18px;
@@ -82,7 +80,6 @@ p {
     margin: 24px 0;
 }
 
-/* Added .btn to style semantic anchor tags exactly like buttons */
 button, .btn {
     background-color: #525B76; 
     color: #F7F5F0; 
@@ -154,7 +151,6 @@ ul {
 }
 
 /* Div Styles */
-/* Added .expense-sum and .planning-box so they share the exact original styles */
 .incomeSum, .expense-sum, .planning-box {
     max-width: 500px; 
     margin: 12px auto; 
@@ -166,7 +162,7 @@ ul {
     background-color: rgba(247, 245, 240, 0.6); 
     border-radius: 8px;
     border-left: 5px solid #7D928B; 
-    box-sizing: border-box; /* Prevents padding from changing box width */
+    box-sizing: border-box; 
 }
 
 #currentGoal {
@@ -188,7 +184,7 @@ form, #expenseForm, #planningForm {
     gap: 16px; 
 }
 
-/* Added layout rule for form groups to display cleanly without <br> elements */
+
 .form-group {
     display: flex;
     flex-direction: column;
@@ -265,7 +261,6 @@ table tr:last-child td {
     border-bottom: none; 
 }
 
-/* Ensures dynamic action buttons inside table match row heights smoothly */
 table td button {
     padding: 6px 12px;
     font-size: 13px;
