@@ -43,4 +43,4 @@ export function loadAppState() {
     }
 }
 
-//loadAppState();
+localStorage.clear(); 
