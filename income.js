@@ -1,7 +1,7 @@
 
 import { appState, loadAppState, saveAppState } from './variables.js';
 
-//loadAppState();
+loadAppState();
 
 let editingRow = null;
 
@@ -52,7 +52,6 @@ function initIncomePage()
             editingRow = row;
             row.remove();
             updateIncomeDisplay();
-            //saveAppState();
         }
 
         if (button.classList.contains('deleteBtn')) 
@@ -61,9 +60,11 @@ function initIncomePage()
             appState.balance -= amountToRemove;
 
             updateIncomeDisplay();
-            //saveAppState();
+            
             row.remove();
         }
+
+        saveAppState();
     });
 
     incomeForm.addEventListener('submit', (event) => 
@@ -85,7 +86,6 @@ function initIncomePage()
         appState.balance += amountValue;
 
         updateIncomeDisplay();
-        //saveAppState();
 
         const newRow = document.createElement('tr');
         newRow.innerHTML = `
@@ -106,6 +106,8 @@ function initIncomePage()
         document.getElementById('incomeSource').value = '';
         document.getElementById('incomeAmount').value = '';
         document.getElementById('incomeNotes').value = '';
+
+        saveAppState();
 
         return false;
     });
