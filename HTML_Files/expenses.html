@@ -42,8 +42,6 @@
                     <h3 class="money-amount" id="monthAmountDisplay">$0.00</h3>
                 </div>
             </div>
-
-            <!-- Form handles additions natively via client event loops inside app.js -->
             <form id="expenseForm">
                 <div class="form-group">
                     <label for="expensesDate">Date:</label>
@@ -77,8 +75,6 @@
                 <button type="submit" id="submitBtn">Add Expense</button>
             </form>
         </section>
-
-        <!-- Section: Responsive interactive entry workspace data grid -->
         <section id="expenseEntries" aria-labelledby="entriesHeading">
             <h2 class="title" id="entriesHeading">Expense Entries</h2>
 
@@ -95,14 +91,12 @@
                         </tr>
                     </thead>
                     <tbody id="expenseEntriesTableBody">
-                        <!-- Dynamic elements populated natively via module mapping strings -->
                     </tbody>
                 </table>
             </div>
         </section>
     </main>
 
-    <!-- Unified modular client initialization entry target link point -->
     <script type="module" src="../app.js"></script>
 </body>
 </html>

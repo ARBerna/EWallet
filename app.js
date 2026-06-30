@@ -94,24 +94,11 @@ function initExpensesFeature() {
             `;
         }).join('');
 
-        //appState.expenses = totalSum;
         const totalAmountEl = document.getElementById('totalAmountDisplay');
         const monthAmountEl = document.getElementById('monthAmountDisplay');
 
         totalAmountEl.innerText = `$${appState.balance.toFixed(2)}`;
         monthAmountEl.innerText = `$${appState.expenses.toFixed(2)}`;
-
-        const monthlyBudgetCap = appState.balance;
-        if (appState.expenses > monthlyBudgetCap) {
-            monthAmountEl.style.color = "#d9534f";
-            monthAmountEl.innerText += " (Over Budget)";
-        } else if (appState.expenses >= monthlyBudgetCap * 0.80) {
-            monthAmountEl.style.color = "#f0ad4e";
-            monthAmountEl.innerText += " (High Spending)";
-        } else {
-            monthAmountEl.style.color = "";
-            monthAmountEl.innerText += " (Under Budget)";
-        }
     }
 }
 
