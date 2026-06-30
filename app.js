@@ -1,5 +1,12 @@
 import { appState } from '../variables.js';
 
+function escapeHTML(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;'
+    }[m]));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const hasExpenseView = !!document.getElementById('expenseForm');
     const hasPlanningView = !!document.getElementById('planningForm');
@@ -72,20 +79,24 @@ function initExpensesFeature() {
 
     function renderExpenseUI() {
         const expenses = appState.transactions.filter(t => t.type === 'expense');
-        const currentMonthStr = new Date().toISOString().slice(0, 7);
+        const now = new Date();
+        const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+        let localCalculatedBalance = appState.balance;
+        let localCalculatedExpenses = 0;
 
         tableBody.innerHTML = expenses.map(e => {
-            appState.balance -= e.amount;
+            localCalculatedBalance -= e.amount;
             if (e.date.startsWith(currentMonthStr)) {
-                appState.expenses += e.amount;
+                localCalculatedExpenses += e.amount;
             }
             return `
                 <tr data-id="${e.id}">
-                    <td>${e.date}</td>
-                    <td>${e.source}</td>
+                    <td>${escapeHTML(e.date)}</td>
+                    <td>${escapeHTML(e.source)}</td>
                     <td><span style="font-weight:bold; font-size:0.85em;">[${e.category}]</span></td>
                     <td>$${e.amount.toFixed(2)}</td>
-                    <td>${e.notes}</td>
+                    <td>${escapeHTML(e.notes)}</td>
                     <td>
                         <button data-action="edit" data-id="${e.id}">Edit</button>
                         <button data-action="delete" data-id="${e.id}">Delete</button>
@@ -97,8 +108,8 @@ function initExpensesFeature() {
         const totalAmountEl = document.getElementById('totalAmountDisplay');
         const monthAmountEl = document.getElementById('monthAmountDisplay');
 
-        totalAmountEl.innerText = `$${appState.balance.toFixed(2)}`;
-        monthAmountEl.innerText = `$${appState.expenses.toFixed(2)}`;
+       if (totalAmountEl) totalAmountEl.innerText = `$${appState.balance.toFixed(2)}`;
+       if (monthAmountEl) monthAmountEl.innerText = `$${appState.expenses.toFixed(2)}`;
     }
 }
 
@@ -107,25 +118,41 @@ function initPlanningFeature() {
     const tableBody = document.getElementById('planningEntriesTableBody');
     
     appState.loadExpenses(); 
-    renderPlanningUI();
 
+    const goalAmountInput = document.getElementById('goalAmount');
+    if (goalAmountInput) {
+        const savedGoal = localStorage.getItem('eWallet_planningGoal');
+       
+        if (savedGoal !== null) {
+            goalAmountInput.value = savedGoal;
+        }
+        
+        goalAmountInput.addEventListener('input', () => {
+            localStorage.setItem('eWallet_planningGoal', goalAmountInput.value);
+            renderPlanningUI();
+        });
+    }
+
+    renderPlanningUI();
+    
     form.addEventListener('submit', (ev) => {
         ev.preventDefault();
         const date = document.getElementById('planningDate').value;
         const description = document.getElementById('planningDescription').value;
         const amount = parseFloat(document.getElementById('planningAmount').value);
+        const savedAmount = parseFloat(document.getElementById('planningSavedAmount')?.value || 0);
         const editId = form.dataset.editId;
 
         if (editId) {
             const idx = appState.transactions.findIndex(t => t.id === editId && t.type === 'plan');
             if (idx !== -1) {
-                appState.transactions[idx] = { id: editId, type: 'plan', date, description, amount };
+                 appState.transactions[idx] = { id: editId, type: 'plan', date, description, amount, savedAmount };
             }
             delete form.dataset.editId;
             document.getElementById('submitPlanBtn').innerText = 'Create Plan';
         } else {
             const id = crypto.randomUUID();
-            appState.transactions.push({ id, type: 'plan', date, description, amount });
+           appState.transactions.push({ id, type: 'plan', date, description, amount, savedAmount });
         }
         
         appState.syncExpenses();
@@ -151,7 +178,8 @@ function initPlanningFeature() {
             document.getElementById('planningDate').value = target.date;
             document.getElementById('planningDescription').value = target.description;
             document.getElementById('planningAmount').value = target.amount;
-
+            const savedAmountInput = document.getElementById('planningSavedAmount');
+            if (savedAmountInput) savedAmountInput.value = target.savedAmount || 0;
             form.dataset.editId = id;
             document.getElementById('submitPlanBtn').innerText = 'Update Plan';
         }
@@ -160,19 +188,23 @@ function initPlanningFeature() {
     function renderPlanningUI() {
         const plans = appState.transactions.filter(t => t.type === 'plan');
         const expenses = appState.transactions.filter(t => t.type === 'expense');
-        const currentMonthStr = new Date().toISOString().slice(0, 7);
+        const now = new Date();
+        const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
         let totalPlanned = plans.reduce((sum, p) => sum + p.amount, 0);
         let monthPlanned = plans.filter(p => p.date.startsWith(currentMonthStr)).reduce((sum, p) => sum + p.amount, 0);
+        let totalSaved = plans.reduce((sum, p) => sum + (parseFloat(p.savedAmount) || 0), 0);
         
-        const baseGoalTarget = 500.00; 
+        const customGoalEl = document.getElementById('goalAmount');
+        const activeGoalTarget = customGoalEl ? (parseFloat(customGoalEl.value) || 0) : 0.00;
         let totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
-        let remainingValue = baseGoalTarget - totalExpenses;
+        let remainingValue = Math.max(0, activeGoalTarget - totalSaved)
 
         tableBody.innerHTML = plans.map(p => `
             <tr data-id="${p.id}">
-                <td>${p.date}</td>
-                <td>${p.description}</td>
+                <td>${escapeHTML(p.date)}</td>
+                <td>${escapeHTML(p.description)}</td>
+                <td>$${(parseFloat(p.savedAmount) || 0).toFixed(2)}</td>
                 <td>$${p.amount.toFixed(2)}</td>
                 <td>
                     <button data-action="edit" data-id="${p.id}">Edit</button>
@@ -183,6 +215,9 @@ function initPlanningFeature() {
 
         document.getElementById('totalPlanningAmountDisplay').innerText = `$${totalPlanned.toFixed(2)}`;
         document.getElementById('monthPlanningAmountDisplay').innerText = `$${monthPlanned.toFixed(2)}`;
+        document.getElementById('totalSavedAmountDisplay').innerText = `$${totalSaved.toFixed(2)}`;
+        document.getElementById('remainingTillGoalDisplay').innerText = `$${remainingValue.toFixed(2)}`;
         
+ 
     }
 }

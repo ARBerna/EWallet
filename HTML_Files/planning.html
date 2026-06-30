@@ -32,8 +32,13 @@
 
             <div class="summary-container">
                 <div id="currentGoal" class="planning-box">
-                    <p class="summary-label">Current Goal:</p>
-                    <h3 class="money-amount" id="currentGoalDisplay">$0.00</h3>
+                    <label for="goalAmount" class="summary-label">Current Goal ($):</label>
+                    <input type="number" id="goalAmount" name="goalAmount" placeholder="0.00" step="0.01" min="0" required>
+                </div>
+
+                <div class="planning-box" style="border-left: 5px solid #525B76;">
+                    <p class="summary-label">Total Savings:</p> 
+                    <h3 class="money-amount" id="totalSavedAmountDisplay" style="color: #525B76;">$0.00</h3>
                 </div>
 
                 <div class="planning-box">
@@ -69,6 +74,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="planningSavedAmount">Amount Saved So Far:</label>
+                    <input type="number" id="planningSavedAmount" name="savedAmount" placeholder="0.00" value="0.00" step="0.01" min="0" required>
+                </div>
+
+                <div class="form-group">
                     <label for="planningAmount">Estimated Amount:</label>
                     <input type="number" id="planningAmount" name="amount" placeholder="0.00" step="0.01" min="0" required>
                 </div>
@@ -85,10 +95,11 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Target Date</th>
-                            <th>Description</th>
-                            <th>Estimated Amount</th>
-                            <th>Actions</th>
+                            <th scope="col">Target Date</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Amount Saved</th>
+                            <th scope="col">Estimated Amount</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="planningEntriesTableBody">
