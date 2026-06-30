@@ -19,6 +19,66 @@ body {
     overflow-x: hidden; 
 }
 
+/* EWALLET Logo Styling */
+.title {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px 20px;
+    text-align: center;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    color: #F7F5F0; 
+    background-color: #525B76;  
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(82, 91, 118, 0.15);
+}
+
+#intro {
+    margin-top: 40px !important; 
+    position: relative !important;
+}
+
+.app-logo-link {
+    position: absolute !important; 
+    left: 20px !important;         
+    top: 25px !important;         
+    width: 48px !important;      
+    height: 48px !important;
+    z-index: 9999 !important;     
+    display: inline-block !important;
+    text-decoration: none !important;
+}
+
+.app-logo-icon {
+    position: absolute !important; 
+    left: 10px !important;         
+    top: 10px !important;         
+    width: 68px !important;      
+    height: 68px !important;
+    object-fit: cover !important;   
+    border-radius: 50% !important;  
+    border: 2px solid #525B76 !important; 
+    background-color: #F7F5F0 !important; 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08) !important;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.2s ease, 
+                box-shadow 0.2s ease !important;   
+}
+
+.app-logo-link:hover .app-logo-icon {
+    transform: scale(1.08) !important; 
+    border-color: #434B62 !important;   
+    box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.15) !important; 
+}
+
+.app-logo-link:active .app-logo-icon {
+    transform: scale(0.96) !important; 
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
 /* Text Styles */
 p {
     font-size: 16px; 
@@ -44,18 +104,6 @@ p {
     font-size: 18px;
     font-weight: bold;
     margin: 0; 
-}
-
-.title {
-    padding: 12px 20px;
-    text-align: center;
-    font-family: "Lucida Console", Monaco, monospace;
-    font-size: 24px;
-    letter-spacing: 0.5px;
-    color: #F7F5F0; 
-    background-color: #525B76;  
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(82, 91, 118, 0.15);
 }
 
 .currentGoalText {
