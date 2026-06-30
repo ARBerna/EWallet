@@ -2,19 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../Pictures/appLogo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../CSS_Files/styles.css">
     <title>EWallet Expenses</title>
 </head>
 <body>
-
+    <a href="../index.html" class="app-logo-link" aria-label="Return to Main Page"></a>
+    <img src="../Pictures/appIcon.png" alt="EWallet Logo" class="app-logo-icon">
     <header id="intro">
-        <h1 class="title">EWallet Expenses</h1>
+        <h1 class = "title">EWallet Expenses</h1>
 
-        <div class="user-profile">
-            <img src="../Pictures/usernameIcon.png" alt="User Profile Icon" id="usernameIcon">
-            <span class="username">(Username)</span>
-      </div>
+        <h2>
+            <img src = "../Pictures/usernameIcon.png" alt = "Username Icon" id = "usernameIcon">
+            (Username)
+        </h2>
   
         <div id = "optionButtons">
             <button id = "incomeButton" onclick = "window.location.href = 'income.html'"><h2>Income</h2></button>
@@ -33,8 +35,8 @@
 
             <div class="summary-container">
                 <div class="expense-sum">
-                    <p class="summary-label">Total Amount:</p> 
-                    <h3 class="money-amount" id="totalAmountDisplay">$0.00</h3>
+                    <p class="summary-label">Current Income:</p> 
+                    <h3 class="money-amount" id="totalAmountDisplay">$500.00</h3>
                 </div>
 
                 <div class="expense-sum">
@@ -42,8 +44,6 @@
                     <h3 class="money-amount" id="monthAmountDisplay">$0.00</h3>
                 </div>
             </div>
-
-            <!-- Form handles additions natively via client event loops inside app.js -->
             <form id="expenseForm">
                 <div class="form-group">
                     <label for="expensesDate">Date:</label>
@@ -77,8 +77,6 @@
                 <button type="submit" id="submitBtn">Add Expense</button>
             </form>
         </section>
-
-        <!-- Section: Responsive interactive entry workspace data grid -->
         <section id="expenseEntries" aria-labelledby="entriesHeading">
             <h2 class="title" id="entriesHeading">Expense Entries</h2>
 
@@ -95,14 +93,12 @@
                         </tr>
                     </thead>
                     <tbody id="expenseEntriesTableBody">
-                        <!-- Dynamic elements populated natively via module mapping strings -->
                     </tbody>
                 </table>
             </div>
         </section>
     </main>
 
-    <!-- Unified modular client initialization entry target link point -->
     <script type="module" src="../app.js"></script>
 </body>
 </html>

@@ -2,17 +2,20 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../Pictures/appLogo.png">
     <link rel = "stylesheet" href = "../CSS_Files/styles.css">
-    <script src = "https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src = "https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
     <title>EWallet Financial Summary</title>
 </head>
 <body>
+    <a href="../index.html" class="app-logo-link" aria-label="Return to Main Page"></a>
+    <img src="../Pictures/appIcon.png" alt="EWallet Logo" class="app-logo-icon">
     <div id = "intro">
         <h1 class = "title">EWallet Financial Summary</h1>
 
         <h2>
             <img src = "../Pictures/usernameIcon.png" alt = "Username Icon" id = "usernameIcon">
-            (Username)
+            <span class="username-text">(Username)</span>
         </h2>
 
         <div id = "optionButtons">
@@ -31,12 +34,12 @@
 
         <div class = "incomeSum">
             <p class = "listName">Total Amount:</p> 
-            <h3 class = "moneyAmount", id = "totalAmount">$0.00</h3>
+            <h3 class = "moneyAmount" id = "totalAmount">$0.00</h3>
         </div>
 
         <div class = "incomeSum">
             <p class = "listName">Income This Month:</p>
-            <h3 class = "moneyAmount", id = "incomeMonth">$0.00</h3>
+            <h3 class = "moneyAmount" id = "incomeMonth">$0.00</h3>
         </div>
 
         <div class = "incomeSum">
