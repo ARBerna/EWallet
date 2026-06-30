@@ -184,18 +184,5 @@ function initPlanningFeature() {
         document.getElementById('totalPlanningAmountDisplay').innerText = `$${totalPlanned.toFixed(2)}`;
         document.getElementById('monthPlanningAmountDisplay').innerText = `$${monthPlanned.toFixed(2)}`;
         
-        const remainingEl = document.getElementById('remainingTillGoalDisplay');
-        remainingEl.innerText = `$${remainingValue.toFixed(2)}`;
-
-        if (remainingValue < 0) {
-            remainingEl.style.color = "#d9534f";
-            remainingEl.innerText += " (Over Goal Limit)";
-        } else if (remainingValue <= 100) {
-            remainingEl.style.color = "#f0ad4e";
-            remainingEl.innerText += " (Approaching Goal Limit)";
-        } else {
-            remainingEl.style.color = "";
-            remainingEl.innerText += " (Within Budget Goal)";
-        }
     }
 }
