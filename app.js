@@ -1,4 +1,4 @@
-import { appState } from './variables.js';
+import { appState } from '../variables.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const hasExpenseView = !!document.getElementById('expenseForm');
@@ -72,14 +72,12 @@ function initExpensesFeature() {
 
     function renderExpenseUI() {
         const expenses = appState.transactions.filter(t => t.type === 'expense');
-        let totalSum = 0;
-        let currentMonthSum = 0;
         const currentMonthStr = new Date().toISOString().slice(0, 7);
 
         tableBody.innerHTML = expenses.map(e => {
-            totalSum += e.amount;
+            appState.balance -= e.amount;
             if (e.date.startsWith(currentMonthStr)) {
-                currentMonthSum += e.amount;
+                appState.expenses += e.amount;
             }
             return `
                 <tr data-id="${e.id}">
@@ -96,18 +94,18 @@ function initExpensesFeature() {
             `;
         }).join('');
 
-        appState.expenses = totalSum;
+        //appState.expenses = totalSum;
         const totalAmountEl = document.getElementById('totalAmountDisplay');
         const monthAmountEl = document.getElementById('monthAmountDisplay');
 
-        totalAmountEl.innerText = `$${totalSum.toFixed(2)}`;
-        monthAmountEl.innerText = `$${currentMonthSum.toFixed(2)}`;
+        totalAmountEl.innerText = `$${appState.balance.toFixed(2)}`;
+        monthAmountEl.innerText = `$${appState.expenses.toFixed(2)}`;
 
         const monthlyBudgetCap = 400.00;
-        if (currentMonthSum > monthlyBudgetCap) {
+        if (appState.expenses > monthlyBudgetCap) {
             monthAmountEl.style.color = "#d9534f";
             monthAmountEl.innerText += " (Over Budget)";
-        } else if (currentMonthSum >= monthlyBudgetCap * 0.80) {
+        } else if (appState.expenses >= monthlyBudgetCap * 0.80) {
             monthAmountEl.style.color = "#f0ad4e";
             monthAmountEl.innerText += " (High Spending)";
         } else {

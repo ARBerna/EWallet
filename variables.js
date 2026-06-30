@@ -1,4 +1,4 @@
-export const appState = {
+ export const appState = {
     balance: 500.00,
     transactions: [], 
     income: 50.00,
@@ -40,7 +40,7 @@ function loadAppState() {
             window.appState = appState;
         }
     } catch (error) {
-        console.error('Failed to load appState from localStorage:', error);
+        console.log('Failed to load appState from localStorage:', error);
     }
 }
 
