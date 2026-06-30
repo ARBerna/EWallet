@@ -11,6 +11,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const hasExpenseView = !!document.getElementById('expenseForm');
     const hasPlanningView = !!document.getElementById('planningForm');
 
+    const accountModal = document.getElementById('accountCreationModal');
+    const profileForm = document.getElementById('accountCreationForm');
+    const usernameContainer = document.querySelector('.username-text') || document.querySelector('h2');
+
+    // Read User account Login Info
+    if (appState.accountCreated && usernameContainer) {
+        usernameContainer.innerHTML = usernameContainer.innerHTML.replace('(Username)', escapeHTML(appState.username));
+    }
+
+    if (!appState.accountCreated && accountModal && profileForm) {
+        accountModal.style.display = 'flex';
+
+        profileForm.addEventListener('submit', (ev) => {
+            ev.preventDefault();
+            const newUsername = document.getElementById('walletUsername').value;
+            const inputBalance = parseFloat(document.getElementById('walletBaseBalance').value) || 500.00;
+            const inputIncome = parseFloat(document.getElementById('walletBaseIncome').value) || 50.00;
+
+            appState.accountCreated = true;
+            appState.username = newUsername;
+            appState.balance = inputBalance;
+            appState.income = inputIncome;
+
+            localStorage.setItem('ewallet_baseBalance', inputBalance.toString());
+            localStorage.setItem('ewallet_baseIncome', inputIncome.toString());
+            
+            if (typeof saveAppState === 'function') {
+                saveAppState();
+            } else {
+                localStorage.setItem('appState', JSON.stringify({
+                    accountCreated: true,
+                    username: newUsername,
+                    baseBalance: inputBalance.toString(),
+                    baseIncome: inputIncome.toString()
+                }));
+            }
+            
+            appState.syncExpenses();
+            accountModal.style.display = 'none';
+            window.location.reload();
+        });
+    }
+
     if (hasExpenseView) {
         initExpensesFeature();
     } else if (hasPlanningView) {
@@ -82,19 +125,12 @@ function initExpensesFeature() {
         const now = new Date();
         const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
-        let localCalculatedBalance = appState.balance;
-        let localCalculatedExpenses = 0;
-
         tableBody.innerHTML = expenses.map(e => {
-            localCalculatedBalance -= e.amount;
-            if (e.date.startsWith(currentMonthStr)) {
-                localCalculatedExpenses += e.amount;
-            }
             return `
                 <tr data-id="${e.id}">
                     <td>${escapeHTML(e.date)}</td>
                     <td>${escapeHTML(e.source)}</td>
-                    <td><span style="font-weight:bold; font-size:0.85em;">[${e.category}]</span></td>
+                    <td><span style="font-weight:bold; font-size:0.85em;">[${escapeHTML(e.category)}]</span></td>
                     <td>$${e.amount.toFixed(2)}</td>
                     <td>${escapeHTML(e.notes)}</td>
                     <td>
@@ -108,8 +144,8 @@ function initExpensesFeature() {
         const totalAmountEl = document.getElementById('totalAmountDisplay');
         const monthAmountEl = document.getElementById('monthAmountDisplay');
 
-       if (totalAmountEl) totalAmountEl.innerText = `$${appState.balance.toFixed(2)}`;
-       if (monthAmountEl) monthAmountEl.innerText = `$${appState.expenses.toFixed(2)}`;
+        if (totalAmountEl) totalAmountEl.innerText = `$${appState.balance.toFixed(2)}`;
+        if (monthAmountEl) monthAmountEl.innerText = `$${appState.expenses.toFixed(2)}`;
     }
 }
 
@@ -122,7 +158,6 @@ function initPlanningFeature() {
     const goalAmountInput = document.getElementById('goalAmount');
     if (goalAmountInput) {
         const savedGoal = localStorage.getItem('eWallet_planningGoal');
-       
         if (savedGoal !== null) {
             goalAmountInput.value = savedGoal;
         }
@@ -134,7 +169,7 @@ function initPlanningFeature() {
     }
 
     renderPlanningUI();
-    
+
     form.addEventListener('submit', (ev) => {
         ev.preventDefault();
         const date = document.getElementById('planningDate').value;
@@ -190,6 +225,8 @@ function initPlanningFeature() {
         const expenses = appState.transactions.filter(t => t.type === 'expense');
         const now = new Date();
         const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+
 
         let totalPlanned = plans.reduce((sum, p) => sum + p.amount, 0);
         let monthPlanned = plans.filter(p => p.date.startsWith(currentMonthStr)).reduce((sum, p) => sum + p.amount, 0);
