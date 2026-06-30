@@ -58,7 +58,12 @@ export const appState = {
 
 
 export function saveAppState() {
-    localStorage.setItem('appState', JSON.stringify(appState));
+    // Load user info from local storage
+    localStorage.setItem('appState', JSON.stringify({
+        accountCreated: appState.accountCreated || false,
+        username: appState.username || "(Username)",
+        transactions: appState.transactions
+    }));
 }
 
 export function loadAppState() {
@@ -68,8 +73,11 @@ export function loadAppState() {
     try {
         const parsed = JSON.parse(saved);
         if (parsed && typeof parsed === 'object') {
-            // Safe manual assignment avoids runtime reference pointer engine exceptions
+            // Fix user account state across app's feature
+            if (parsed.accountCreated !== undefined) appState.accountCreated = parsed.accountCreated;
+            if (parsed.username !== undefined) appState.username = parsed.username;
             if (parsed.transactions) appState.transactions = parsed.transactions;
+            
             appState.updateTotals();
             window.appState = appState;
         }
