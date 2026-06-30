@@ -7,7 +7,95 @@ function escapeHTML(str) {
     }[m]));
 }
 
+async function hashPassword(password) {
+    const msgBuffer = new TextEncoder().encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function handleAuthFormSubmit(ev) {
+    if (ev && typeof ev.preventDefault === 'function') ev.preventDefault();
+
+    const usernameEl = document.getElementById('walletUsername');
+    const passwordEl = document.getElementById('walletPassword');
+    if (!usernameEl || !passwordEl) return;
+
+    const newUsername = usernameEl.value.trim();
+    const rawPassword = passwordEl.value;
+    if (!newUsername || !rawPassword) {
+        alert('Please fill out both fields.');
+        return;
+    }
+
+    const hashedPassword = await hashPassword(rawPassword);
+    
+    let accounts = [];
+    try {
+        const storedAccounts = localStorage.getItem('ewallet_accounts_db');
+        if (storedAccounts) accounts = JSON.parse(storedAccounts);
+    } catch(e) { console.error("Database read exception:", e); }
+
+    const existingAccount = accounts.find(a => a.username.toLowerCase() === newUsername.toLowerCase());
+
+    if (existingAccount) {
+        if (hashedPassword === existingAccount.passwordHash) {
+            appState.accountCreated = true;
+            appState.isLoggedIn = true;
+            appState.username = existingAccount.username;
+            appState.passwordHash = existingAccount.passwordHash;
+            appState.transactions = existingAccount.transactions || [];
+            
+            localStorage.setItem('ewallet_baseBalance', existingAccount.baseBalance);
+            localStorage.setItem('ewallet_baseIncome', existingAccount.baseIncome);
+        } else {
+            alert("Invalid account credentials provided.");
+            return;
+        }
+    } else {
+        const balanceEl = document.getElementById('walletBaseBalance');
+        const incomeEl = document.getElementById('walletBaseIncome');
+        const inputBalance = balanceEl ? (parseFloat(balanceEl.value) || 500.00) : 500.00;
+        const inputIncome = incomeEl ? (parseFloat(incomeEl.value) || 50.00) : 50.00;
+
+        const newAccountRecord = {
+            username: newUsername,
+            passwordHash: hashedPassword,
+            baseBalance: inputBalance.toString(),
+            baseIncome: inputIncome.toString(),
+            transactions: []
+        };
+
+        accounts.push(newAccountRecord);
+        localStorage.setItem('ewallet_accounts_db', JSON.stringify(accounts));
+
+        appState.accountCreated = true;
+        appState.isLoggedIn = true;
+        appState.username = newUsername;
+        appState.passwordHash = hashedPassword;
+        appState.transactions = [];
+        
+        localStorage.setItem('ewallet_baseBalance', inputBalance.toString());
+        localStorage.setItem('ewallet_baseIncome', inputIncome.toString());
+    }
+
+    appState.syncExpenses();
+    if (typeof saveAppState === 'function') saveAppState();
+
+    const accountModal = document.getElementById('accountCreationModal');
+    if (accountModal) accountModal.style.display = 'none';
+
+    window.location.reload();
+}
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
+    if (typeof loadAppState === 'function') {
+        loadAppState();
+    } else {
+        appState.loadExpenses();
+    }
     const hasExpenseView = !!document.getElementById('expenseForm');
     const hasPlanningView = !!document.getElementById('planningForm');
     const hasIncomeView = !!document.getElementById('incomeForm');
@@ -15,44 +103,64 @@ document.addEventListener('DOMContentLoaded', () => {
     const accountModal = document.getElementById('accountCreationModal');
     const profileForm = document.getElementById('accountCreationForm');
     const usernameContainer = document.querySelector('.username-text') || document.querySelector('h2');
+    const authBtn = document.getElementById('authBtn');
 
-    // Read User account Login Info
+    if (authBtn) {
+        authBtn.innerText = appState.isLoggedIn ? 'Logout' : 'Login';
+        
+        authBtn.addEventListener('click', () => {
+            if (appState.isLoggedIn) {
+                appState.isLoggedIn = false; 
+                
+                if (usernameContainer) {
+                    usernameContainer.textContent = "(Guest)";
+                }
+                
+                const userField = document.getElementById('walletUsername');
+                const passField = document.getElementById('walletPassword');
+                if (userField) userField.value = '';
+                if (passField) passField.value = '';
+                
+                appState.syncExpenses();
+                
+                if (accountModal) {
+                    accountModal.style.display = 'flex';
+                }
+            } else if (accountModal) {
+                accountModal.style.display = 'flex'; 
+            }
+        });
+    }
+    
     if (appState.accountCreated && usernameContainer) {
         usernameContainer.innerHTML = usernameContainer.innerHTML.replace('(Username)', escapeHTML(appState.username));
     }
 
-    if (!appState.accountCreated && accountModal && profileForm) {
+    if (!appState.isLoggedIn && accountModal && profileForm) {
         accountModal.style.display = 'flex';
-
-        profileForm.addEventListener('submit', (ev) => {
-            ev.preventDefault();
-            const newUsername = document.getElementById('walletUsername').value;
-            const inputBalance = parseFloat(document.getElementById('walletBaseBalance').value) || 500.00;
-            const inputIncome = parseFloat(document.getElementById('walletBaseIncome').value) || 50.00;
-
-            appState.accountCreated = true;
-            appState.username = newUsername;
-            appState.balance = inputBalance;
-            appState.income = inputIncome;
-
-            localStorage.setItem('ewallet_baseBalance', inputBalance.toString());
-            localStorage.setItem('ewallet_baseIncome', inputIncome.toString());
-            
-            if (typeof saveAppState === 'function') {
-                saveAppState();
-            } else {
-                localStorage.setItem('appState', JSON.stringify({
-                    accountCreated: true,
-                    username: newUsername,
-                    baseBalance: inputBalance.toString(),
-                    baseIncome: inputIncome.toString()
-                }));
+        
+        const modalTitle = document.getElementById('modalTitle');
+        const baseBalanceInput = document.getElementById('walletBaseBalance');
+        const setupFields = baseBalanceInput ? baseBalanceInput.closest('.form-group').parentNode : null;
+        
+        if (appState.accountCreated && modalTitle) {
+            modalTitle.innerText = "Log In to Your Wallet";
+            if (setupFields) {
+                setupFields.style.display = 'none'; 
             }
-            
-            appState.syncExpenses();
-            accountModal.style.display = 'none';
-            window.location.reload();
-        });
+        }
+
+        profileForm.addEventListener('submit', handleAuthFormSubmit);
+        const submitBtn = document.getElementById('createAccountBtn') || profileForm.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.onclick = handleAuthFormSubmit;
+        }
+    } else if (!appState.isLoggedIn) {
+        const isIndexPage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || !window.location.pathname.includes('.html');
+        if (!isIndexPage) {
+            window.location.href = 'index.html';
+            return;
+        }
     }
 
     if (hasExpenseView) {
@@ -75,10 +183,18 @@ function initExpensesFeature() {
         ev.preventDefault();
         const date = document.getElementById('expensesDate').value;
         const source = document.getElementById('expensesSource').value;
-        const amount = parseFloat(document.getElementById('expensesAmount').value);
+        const amount = parseFloat(document.getElementById('expensesAmount').value) || 0;
         const category = document.getElementById('expensesCategory').value;
         const notes = document.getElementById('expensesNotes').value;
         const editId = form.dataset.editId;
+
+        const safeUUID = () => {
+            if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                const r = Math.random() * 16 | 0;
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+        };
 
         if (editId) {
             const idx = appState.transactions.findIndex(t => t.id === editId && t.type === 'expense');
@@ -86,9 +202,10 @@ function initExpensesFeature() {
                 appState.transactions[idx] = { id: editId, type: 'expense', date, source, amount, category, notes };
             }
             delete form.dataset.editId;
-            document.getElementById('submitBtn').innerText = 'Add Expense';
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) submitBtn.innerText = 'Add Expense';
         } else {
-            const id = crypto.randomUUID();
+            const id = safeUUID(); 
             appState.transactions.push({ id, type: 'expense', date, source, amount, category, notes });
         }
 
@@ -155,6 +272,7 @@ function initExpensesFeature() {
 function initPlanningFeature() {
     const form = document.getElementById('planningForm');
     const tableBody = document.getElementById('planningEntriesTableBody');
+    if (!form || !tableBody) return;
     
     appState.loadExpenses(); 
 
@@ -177,9 +295,17 @@ function initPlanningFeature() {
         ev.preventDefault();
         const date = document.getElementById('planningDate').value;
         const description = document.getElementById('planningDescription').value;
-        const amount = parseFloat(document.getElementById('planningAmount').value);
+        const amount = parseFloat(document.getElementById('planningAmount').value) || 0;
         const savedAmount = parseFloat(document.getElementById('planningSavedAmount')?.value || 0);
         const editId = form.dataset.editId;
+
+        const safeUUID = () => {
+            if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                const r = Math.random() * 16 | 0;
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+        };
 
         if (editId) {
             const idx = appState.transactions.findIndex(t => t.id === editId && t.type === 'plan');
@@ -187,79 +313,97 @@ function initPlanningFeature() {
                  appState.transactions[idx] = { id: editId, type: 'plan', date, description, amount, savedAmount };
             }
             delete form.dataset.editId;
-            document.getElementById('submitPlanBtn').innerText = 'Create Plan';
+            const submitBtn = document.getElementById('submitPlanBtn');
+            if (submitBtn) submitBtn.innerText = 'Create Plan';
         } else {
-            const id = crypto.randomUUID();
-           appState.transactions.push({ id, type: 'plan', date, description, amount, savedAmount });
+            appState.transactions.push({ id: safeUUID(), type: 'plan', date, description, amount, savedAmount });
         }
         
         appState.syncExpenses();
+        if (typeof saveAppState === 'function') saveAppState();
         renderPlanningUI();
         form.reset();
     });
 
     tableBody.addEventListener('click', (ev) => {
-        const actionBtn = ev.target.closest('button[data-action]');
+        const actionBtn = ev.target.closest('button');
         if (!actionBtn) return;
 
-        const action = actionBtn.dataset.action;
-        const id = actionBtn.dataset.id;
+        const row = actionBtn.closest('tr');
+        const id = row ? row.dataset.id : null;
+        if (!id) return;
+
+        const action = actionBtn.dataset.action || (actionBtn.classList.contains('editBtn') ? 'edit' : actionBtn.classList.contains('deleteBtn') ? 'delete' : null);
 
         if (action === 'delete') {
             appState.transactions = appState.transactions.filter(t => t.id !== id);
             appState.syncExpenses();
+            if (typeof saveAppState === 'function') saveAppState();
             renderPlanningUI();
         } else if (action === 'edit') {
             const target = appState.transactions.find(t => t.id === id);
             if (!target) return;
 
-            document.getElementById('planningDate').value = target.date;
-            document.getElementById('planningDescription').value = target.description;
-            document.getElementById('planningAmount').value = target.amount;
+            document.getElementById('planningDate').value = target.date || '';
+            document.getElementById('planningDescription').value = target.description || '';
+            document.getElementById('planningAmount').value = target.amount || 0;
+            
             const savedAmountInput = document.getElementById('planningSavedAmount');
             if (savedAmountInput) savedAmountInput.value = target.savedAmount || 0;
+            
             form.dataset.editId = id;
-            document.getElementById('submitPlanBtn').innerText = 'Update Plan';
+            const submitBtn = document.getElementById('submitPlanBtn');
+            if (submitBtn) submitBtn.innerText = 'Update Plan';
         }
     });
 
-    function renderPlanningUI() {
-        const plans = appState.transactions.filter(t => t.type === 'plan');
-        const expenses = appState.transactions.filter(t => t.type === 'expense');
-        const now = new Date();
-        const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+function renderPlanningUI() {
+    const tableBody = document.getElementById('planningEntriesTableBody');
+    if (!tableBody) return;
 
+    const plans = appState.transactions.filter(t => t.type === 'plan');
+    const now = new Date();
+    const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
+    const totalPlanned = plans.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+    const monthPlanned = plans
+        .filter(p => String(p.date).startsWith(currentMonthStr))
+        .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+    const totalSaved = plans.reduce((sum, p) => sum + (parseFloat(p.savedAmount) || 0), 0);
+    
+    const customGoalEl = document.getElementById('goalAmount');
+    const activeGoalTarget = customGoalEl ? (parseFloat(customGoalEl.value) || 0) : 0.00;
+    const remainingValue = Math.max(0, activeGoalTarget - totalSaved);
 
-        let totalPlanned = plans.reduce((sum, p) => sum + p.amount, 0);
-        let monthPlanned = plans.filter(p => p.date.startsWith(currentMonthStr)).reduce((sum, p) => sum + p.amount, 0);
-        let totalSaved = plans.reduce((sum, p) => sum + (parseFloat(p.savedAmount) || 0), 0);
-        
-        const customGoalEl = document.getElementById('goalAmount');
-        const activeGoalTarget = customGoalEl ? (parseFloat(customGoalEl.value) || 0) : 0.00;
-        let totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
-        let remainingValue = Math.max(0, activeGoalTarget - totalSaved)
-
-        tableBody.innerHTML = plans.map(p => `
-            <tr data-id="${p.id}">
+    tableBody.innerHTML = plans.map(p => {
+        const safeId = escapeHTML(p.id);
+        return `
+            <tr data-id="${safeId}">
                 <td>${escapeHTML(p.date)}</td>
                 <td>${escapeHTML(p.description)}</td>
                 <td>$${(parseFloat(p.savedAmount) || 0).toFixed(2)}</td>
-                <td>$${p.amount.toFixed(2)}</td>
+                <td>$${(Number(p.amount) || 0).toFixed(2)}</td>
                 <td>
-                    <button data-action="edit" data-id="${p.id}">Edit</button>
-                    <button data-action="delete" data-id="${p.id}">Delete</button>
+                    <button class="editBtn" data-action="edit" data-id="${safeId}">Edit</button>
+                    <button class="deleteBtn" data-action="delete" data-id="${safeId}">Delete</button>
                 </td>
             </tr>
-        `).join('');
+        `;
+    }).join('');
 
-        document.getElementById('totalPlanningAmountDisplay').innerText = `$${totalPlanned.toFixed(2)}`;
-        document.getElementById('monthPlanningAmountDisplay').innerText = `$${monthPlanned.toFixed(2)}`;
-        document.getElementById('totalSavedAmountDisplay').innerText = `$${totalSaved.toFixed(2)}`;
-        document.getElementById('remainingTillGoalDisplay').innerText = `$${remainingValue.toFixed(2)}`;
-        
- 
-    }
+    const updates = {
+        'totalPlanningAmountDisplay': totalPlanned,
+        'monthPlanningAmountDisplay': monthPlanned,
+        'totalSavedAmountDisplay': totalSaved,
+        'remainingTillGoalDisplay': remainingValue
+    };
+
+    Object.entries(updates).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = `$${val.toFixed(2)}`;
+    });
+}
+
 }
 
 function initIncomeFeature() {
@@ -349,4 +493,35 @@ function initIncomeFeature() {
         }
     }
 }
+
+window.addEventListener('storage', (event) => {
+    if (event.key === 'appState') {
+        if (typeof loadAppState === 'function') loadAppState();
+
+        const isIndexPage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || !window.location.pathname.includes('.html');
+        const accountModal = document.getElementById('accountCreationModal');
+        const usernameContainer = document.querySelector('.username-text') || document.querySelector('h2');
+        
+        if (appState.isLoggedIn && usernameContainer) {
+            usernameContainer.textContent = escapeHTML(appState.username);
+            if (accountModal) accountModal.style.display = 'none';
+        } else if (!appState.isLoggedIn && !isIndexPage) {
+            window.location.href = 'index.html';
+        } else if (!appState.isLoggedIn && isIndexPage && accountModal) {
+            if (accountModal.style.display !== 'flex') {
+                accountModal.style.display = 'flex';
+            }
+        }
+        const hasExpenseView = !!document.getElementById('expenseForm');
+        const hasPlanningView = !!document.getElementById('planningForm'); 
+        
+        if (hasExpenseView && typeof renderExpenseUI === 'function') {
+            renderExpenseUI();
+        }
+        if (hasPlanningView && typeof renderPlanningUI === 'function') { 
+            renderPlanningUI();
+        }
+    }
+});
+
 

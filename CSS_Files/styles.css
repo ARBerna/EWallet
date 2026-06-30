@@ -14,7 +14,7 @@ body {
     font-family: "Lucida Console", Monaco, monospace; 
     color: #2B2B2B;
     border: 10px double #525B76; 
-    min-height: calc(100vh - 40px);
+    min-height: 100vh;
     position: relative;
     overflow-x: hidden; 
 }
@@ -123,6 +123,7 @@ p {
 /* Button Styles */
 #optionButtons {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 16px;
     margin: 24px 0;
@@ -163,23 +164,23 @@ ul {
 
 /* Image Styles */
 #pawPrints1, #pawPrints2, #pawPrints3, #pawPrints4, #pawPrints5, #pawPrints6, #pawPrints7 {
-    position: absolute;
+    position: fixed; /* Fixed context prevents absolute layout drift on transaction additions */
     z-index: -1; 
-    opacity: 0.15; 
+    opacity: 0.12; 
     pointer-events: none;
 }
 
-#pawPrints1 { top: 350px; left: 85%; width: 200px; transform: rotate(-45deg); }
-#pawPrints2 { top: 1100px; left: 85%; width: 220px; transform: rotate(20deg); }
-#pawPrints3 { top: 1600px; left: 5%; width: 180px; transform: rotate(97deg); }
-#pawPrints4 { top: 180px; left: 80%; width: 180px; transform: rotate(-70deg); }
-#pawPrints5 { top: 315px; left: 2%; width: 110px; transform: rotate(15deg); }
-#pawPrints6 { top: 250px; left: 80%; width: 180px; transform: rotate(-75deg); }
-#pawPrints7 { top: 325px; left: 2%; width: 130px; transform: rotate(15deg); }
+#pawPrints1 { top: 20%; left: 85%; width: 15vw; max-width: 200px; transform: rotate(-45deg); }
+#pawPrints2 { top: 45%; left: 85%; width: 16vw; max-width: 220px; transform: rotate(20deg); }
+#pawPrints3 { top: 70%; left: 5%;  width: 14vw; max-width: 180px; transform: rotate(97deg); }
+#pawPrints4 { top: 15%; left: 80%; width: 14vw; max-width: 180px; transform: rotate(-70deg); }
+#pawPrints5 { top: 30%; left: 2%;  width: 9vw;  max-width: 110px; transform: rotate(15deg); }
+#pawPrints6 { top: 22%; left: 80%; width: 14vw; max-width: 180px; transform: rotate(-75deg); }
+#pawPrints7 { top: 32%; left: 2%;  width: 10vw; max-width: 130px; transform: rotate(15deg); }
 
 @media (max-width: 1024px) {
     #pawPrints1, #pawPrints2, #pawPrints3, #pawPrints4, #pawPrints5, #pawPrints6, #pawPrints7 {
-        display: none;
+        display: none !important;
     }
 }
 
@@ -195,11 +196,14 @@ ul {
 
 #logo {
     display: block;
+    max-width: 100%;
+    height: auto;
     margin: 0 auto;
 }
 
 /* Div Styles */
 .incomeSum, .expense-sum, .planning-box {
+    width: 100%;
     max-width: 500px; 
     margin: 12px auto; 
     padding: 16px 20px;
@@ -207,7 +211,7 @@ ul {
     align-items: center;
     justify-content: space-between; 
     gap: 25px;
-    background-color: rgba(247, 245, 240, 0.6); 
+    background-color: rgba(247, 245, 240, 0.9); /* Enhanced opacity for text accessibility readability metrics */
     border-radius: 8px;
     border-left: 5px solid #7D928B; 
     box-sizing: border-box; 
@@ -215,23 +219,25 @@ ul {
 
 #currentGoal {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     gap: 25px;
-    width: fit-content;
+    width: 100%;
+    max-width: 500px;
     margin: 0 auto;
     padding: 16px;
 }
 
 /* Form Styles */
 form, #expenseForm, #planningForm {
+    width: 100%;
     max-width: 500px; 
     margin: 32px auto; 
     display: flex;
     flex-direction: column; 
     gap: 16px; 
 }
-
 
 .form-group {
     display: flex;
@@ -243,7 +249,7 @@ label {
     font-family: "Lucida Console", Monaco, monospace;
     font-size: 15px;
     font-weight: bold;
-    margin-bottom: 2px;
+    margin-bottom: 6px;
     color: #2B2B2B;
     text-transform: uppercase; 
     letter-spacing: 0.5px;
@@ -252,7 +258,7 @@ label {
 form input, form select, form textarea {
     padding: 12px;
     font-family: "Lucida Console", Monaco, monospace;
-    font-size: 15px;
+    font-size: 16px; /* Native 16px sizing eliminates automatic system layouts browser zooming on iOS Safari profiles */
     color: #2B2B2B;
     border: 2px solid #7D928B; 
     border-radius: 6px;
@@ -266,15 +272,22 @@ form input:focus, form select:focus, form textarea:focus {
     outline: none;
     background-color: #ffffff;
     border-color: #525B76; 
-    box-shadow: 0 0 0 3px rgba(82, 91, 118, 0.15);
+    box-shadow: 0 0 0 4px rgba(82, 91, 118, 0.2);
 }
 
 /* Table Styles */
-table {
+.table-responsive {
+    width: 100%;
+    overflow-x: auto; /* Activates horizontal touch scrolling boundaries securely on small screen devices */
+    -webkit-overflow-scrolling: touch;
     margin: 40px auto;
+}
+
+table {
+    margin: 0 auto;
     border-collapse: separate; 
     border-spacing: 0;
-    width: 90%;
+    width: 95%;
     max-width: 1000px;
     background-color: #F7F5F0;
     border-radius: 8px;
@@ -300,9 +313,8 @@ td {
     font-size: 15px;
     color: #333333;
     border-bottom: 1px solid rgba(125, 146, 139, 0.25); 
-    max-width: 300px;
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 table tr:last-child td {
@@ -310,7 +322,33 @@ table tr:last-child td {
 }
 
 table td button {
-    padding: 6px 12px;
-    font-size: 13px;
-    margin-right: 4px;
+    padding: 8px 14px;
+    font-size: 14px;
+    margin: 4px 4px 4px 0;
+    min-width: 70px;
+    min-height: 38px; /* Safe minimum touch metric target expansion formatting */
+}
+
+/* Centralized Onboarding Modal Interface Overlay Layering Rules */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(43, 43, 43, 0.7); /* Translucent charcoal layer hides secondary layouts */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000; /* Stacks mask safely on top of fixed navigational structures */
+}
+
+.modal-card {
+    background-color: #A2C3A4;
+    padding: 30px;
+    border: 6px double #525B76;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 460px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }

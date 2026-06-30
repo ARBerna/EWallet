@@ -1,42 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="Pictures/appLogo.png">
-    <link rel = "stylesheet" href = "CSS_Files/styles.css">
+    <link rel="stylesheet" href="CSS_Files/styles.css">
     <title>EWallet</title>
 </head>
 <body>
     <a href="index.html" class="app-logo-link" aria-label="Return to Main Page"></a>
-    <img src="Pictures/appIcon.png" alt="EWallet Logo" class="app-logo-icon">
-    <div id = "intro">
-       <h1 class = "title"> EWallet</h1>
+    <img src="Pictures/appIcon.png" alt="EWallet Corporate Logo" class="app-logo-icon">
+    
+    <header id="intro">
+        <h1 class = "title">EWallet</h1>
 
         <h2>
             <img src = "Pictures/usernameIcon.png" alt = "Username Icon" id = "usernameIcon">
             <span class="username-text">(Username)</span>
+            <button id="authBtn" class="btn" style="margin-left:10px; padding:4px 10px; font-size:12px;"></button>
         </h2>
 
         <div id = "optionButtons">
-            <button id = "incomeButton" onclick = "window.location.href = 'HTML_Files/income.html'"><h2>Income</h2></button>
-            <button id = "expenseButton" onclick = "window.location.href = 'HTML_Files/expenses.html'"><h2>Expenses</h2></button>
-            <button id = "planningButton" onclick = "window.location.href = 'HTML_Files/planning.html'"><h2>Planning</h2></button>
-            <button id = "summaryButton" onclick = "window.location.href = 'HTML_Files/financialSummary.html'"><h2>Summary</h2></button>
+            <button id = "incomeButton" onclick = "window.location.href = './HTML_Files/income.html'"><h2>Income</h2></button>
+            <button id = "expenseButton" onclick = "window.location.href = './HTML_Files/expenses.html'"><h2>Expenses</h2></button>
+            <button id = "planningButton" onclick = "window.location.href = './HTML_Files/planning.html'"><h2>Planning</h2></button>
+            <button id = "summaryButton" onclick = "window.location.href = './HTML_Files/financialSummary.html'"><h2>Summary</h2></button>
         </div>
-    </div>
+    </header>
 
-    <!-- User Account Setup -->
-    <div id="accountCreationModal" class="modal-overlay" style="display: none;">
+    <!-- User Account Setup Model Block -->
+    <div id="accountCreationModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal-card">
-            <h2 class="title">Create E-Wallet Account</h2>
-            <form id="accountCreationForm">
+            <h2 class="title" id="modalTitle">Create E-Wallet Account</h2>
+            <form id="accountCreationForm" novalidate>
                 <div class="form-group">
                     <label for="walletUsername">Username:</label>
-                    <input type="text" id="walletUsername" required>
+                    <input type="text" id="walletUsername" placeholder="Enter username..." autocomplete="username" required>
                 </div>
                 <div class="form-group">
                     <label for="walletBaseBalance">Starting Balance ($):</label>
                     <input type="number" id="walletBaseBalance" value="500.00" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="walletPassword">Password:</label>
+                    <input type="password" id="walletPassword" placeholder="Enter password..." autocomplete="current-password" required>
                 </div>
                 <div class="form-group">
                     <label for="walletBaseIncome">Starting Monthly Income ($):</label>
@@ -47,84 +54,83 @@
         </div>
     </div>
 
+    <div id="explination">
+        <h2 class="title">Welcome!</h2>
 
-    <div id = "explination">
-        <h1 class = "title">Welcome!</h1>
+        <img src="Pictures/PawPrints.png" alt="" role="presentation" id="pawPrints1">
 
-        <img src = "Pictures/PawPrints.png" alt = "Paw Prints" id = "pawPrints1">
-
-        <p class = "generalText">Welcome to EWallet! Here you can see how each of our pages works</p><br>
+        <p class="generalText">Welcome to EWallet! Here you can see how each of our pages works</p>
 
         <ul>
-            <li><p class = "listName">Income</p>
+            <li><span class="listName">Income</span>
                 <ul>
-                    <li><p>Display your total amount of money</p></li>
-                    <li><p>Show your income per month</p></li>
-                    <li><p>Add/Modify/Delete income entries</p></li>
+                    <li>Display your total amount of money</li>
+                    <li>Show your income per month</li>
+                    <li>Add/Modify/Delete income entries</li>
                 </ul>
             </li>
-            <li><p class = "listName">Expenses</p>
+            <li><span class="listName">Expenses</span>
                 <ul>
-                    <li><p>Display your total amount of money</p></li>
-                    <li><p>Show your spending per month</p></li>
-                    <li><p>Add/Modify/Delete expense entries</p></li>
+                    <li>Display your total amount of money</li>
+                    <li>Show your spending per month</li>
+                    <li>Add/Modify/Delete expense entries</li>
                 </ul>
             </li>
-            <li><p class = "listName">Planning</p>
+            <li><span class="listName">Planning</span>
                 <ul>
-                    <li><p>Display your total amount of money put into your plan</p></li>
-                    <li><p>Show how much you have added to the plan per month</p></li>
-                    <li><p>Show how much more you have to add to meet your goal</p></li>
-                    <li><p>Add/Modify/Delete plan entries</p></li>
+                    <li>Display your total amount of money put into your plan</li>
+                    <li>Show how much you have added to the plan per month</li>
+                    <li>Show how much more you have to add to meet your goal</li>
+                    <li>Add/Modify/Delete plan entries</li>
                 </ul>
             </li>
-            <li><p class = "listName">Summary</p>
+            <li><span class="listName">Summary</span>
                 <ul>
-                    <li><p>Display a summary of your financial status</p></li>
-                    <li><p>Show your income, expenses, and balance</p></li>
-                    <li><p>Provide insights into your financial habits</p></li>
+                    <li>Display a summary of your financial status</li>
+                    <li>Show your income, expenses, and balance</li>
+                    <li>Provide insights into your financial habits</li>
                 </ul>
             </li>
         </ul>
     </div>
 
-    <div id = "contributers">
-        <h1 class = "title">Contributers</h1>
+    <div id="contributers">
+        <h2 class="title">Contributors</h2>
 
-        <img src = "Pictures/PawPrints.png" alt = "Paw Prints" id = "pawPrints2">
-        <img src = "Pictures/PawPrints.png" alt = "Paw Prints" id = "pawPrints3">
+        <img src="Pictures/PawPrints.png" alt="" role="presentation" id="pawPrints2">
+        <img src="Pictures/PawPrints.png" alt="" role="presentation" id="pawPrints3">
 
-        <p class = "generalText">This project is sponsered by...</p><br>
+        <p class="generalText">This project is sponsored by...</p>
 
         <ul>
-            <li><p class = "listName">Professor Mohamid Abusharkh</p>
+            <li><span class="listName">Professor Mohamed Abusharkh</span>
                 <ul>
-                    <li><p>Professor/Advisor at Ferris State University</p></li>
+                    <li>Professor/Advisor at Ferris State University</li>
                 </ul>
             </li>
-            <li><p class = "listName">Gentil Herve Ishimwe</p>
+            <li><span class="listName">Gentil Herve Ishimwe</span>
                 <ul>
-                    <li><p>Student at Ferris State University</p></li>
-                    <li><p>Software Engineer in the project</p></li>
+                    <li>Student at Ferris State University</li>
+                    <li>Software Engineer in the project</li>
                 </ul>
             </li>
-            <li><p class = "listName">Ashley R. Berna</p>
+            <li><span class="listName">Ashley R. Berna</span>
                 <ul>
-                    <li><p>Student at Ferris State University</p></li>
-                    <li><p>Scrum Master in the project</p></li>
+                    <li>Student at Ferris State University</li>
+                    <li>Scrum Master in the project</li>
                 </ul>
             </li>
-                <li><p class = "listName">⁠Kenneth Trelfa</p>
+            <li><span class="listName">Kenneth Trelfa</span>
                 <ul>
-                    <li><p>Student at Ferris State University</p></li>
-                    <li><p>Software Engineer in the project</p></li>
+                    <li>Student at Ferris State University</li>
+                    <li>Software Engineer in the project</li>
                 </ul>
             </li>
         </ul>
 
-        <h2 id = "slogan">Go Dogs!</h2>
+        <h3 id="slogan">Go Dogs!</h3>
 
-        <img src = "Pictures/FerrisStateLogo.png" alt = "Ferris State Logo" id = "logo">
+        <img src="Pictures/FerrisStateLogo.png" alt="Ferris State University Bulldogs Logo" id="logo">
     </div>
 
     <script type="module" src="./app.js"></script>
