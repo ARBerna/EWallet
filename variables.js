@@ -5,5 +5,24 @@ export const appState = {
     expenses: 80
 };
 
-//use import on each js file that uses this:
-//import { appState } from './variables.js';
+function saveAppState() {
+    localStorage.setItem('appState', JSON.stringify(appState));
+}
+
+function loadAppState() {
+    const saved = localStorage.getItem('appState');
+    if (!saved) return;
+
+    try {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+            appState = Object.assign(appState, parsed);
+            window.appState = appState;
+        }
+    } catch (error) {
+        console.error('Failed to load appState from localStorage:', error);
+    }
+}
+
+loadAppState();
+window.appState = appState;

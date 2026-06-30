@@ -30,17 +30,12 @@
 
         <div class = "incomeSum">
             <p class = "listName">Total Amount:</p> 
-            <h3 class = "moneyAmount">$0.00</h3>
+            <h3 class = "moneyAmount" id="incomeDisplay">$0.00</h3>
         </div>
-
-        <div class = "incomeSum">
-            <p class = "listName">Income For the Month:</p>
-            <h3 class = "moneyAmount">$0.00</h3>
-        </div><br><br>
 
         <!-- <form action = "/income" method = "post"> -->
 
-        <form action = "javascript:submitForm()" method = "post">
+        <form id="incomeForm" method="post">
             <label for = "incomeDate">Date:</label>
             <input type = "date" id = "incomeDate" name = "date" required><br><br>
             
@@ -76,7 +71,7 @@
                 <tr>
                     <td>2026-06-22</td>
                     <td>Paycheck</td>
-                    <td>1000.00</td>
+                    <td>50.00</td>
                     <td>Got extra hours this week on monday tuesday and wednesday</td>
                     <td>
                         <button class="editBtn">Edit</button>
@@ -89,11 +84,18 @@
         </table>
     </section>
 
-    <script type="text/javascript">
-    
+    <script src="../variables.js">
+    </script>
+
+    <script>
+
     const incomeEntries = document.getElementById('incomeEntries');
     const addButton = document.getElementById('addBtn');
     let editingRow = null;
+
+    function updateIncomeDisplay() {
+        document.getElementById('incomeDisplay').textContent = '$' + appState.income.toFixed(2);
+    }
 
     incomeEntries.addEventListener('click', (event) => 
     {
@@ -112,18 +114,32 @@
             document.getElementById('incomeAmount').value = amountCell.textContent;
             document.getElementById('incomeNotes').value = notesCell.textContent;
 
+            const amountToRemove = parseFloat(row.cells[2].textContent);
+            appState.income -= amountToRemove;
+
             addButton.textContent = 'Update Income';
             editingRow = row;
             row.remove();
+            updateIncomeDisplay();
+            saveAppState();
         }
 
         if (target.classList.contains('deleteBtn')) {
             const row = target.closest('tr');
+
+            const amountToRemove = parseFloat(row.cells[2].textContent);
+            appState.income -= amountToRemove;
+
+            updateIncomeDisplay();
+            saveAppState();
+
             row.remove();
         }
     });
 
-    function submitForm() {
+    function submitForm(event) {
+        event.preventDefault();
+
         const date = document.getElementById('incomeDate').value;
         const source = document.getElementById('incomeSource').value;
         const amount = document.getElementById('incomeAmount').value;
@@ -133,6 +149,10 @@
             alert('Please complete date, source, and amount fields.');
             return false;
         }
+
+        appState.income += parseFloat(amount);
+        updateIncomeDisplay();
+        saveAppState();
 
         const tbody = document.getElementById('incomeEntries');
         const newRow = document.createElement('tr');
@@ -157,6 +177,9 @@
 
         return false;
     }
+
+    document.getElementById('incomeForm').addEventListener('submit', submitForm);
+    updateIncomeDisplay();
 
     </script>
 
