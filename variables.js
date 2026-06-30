@@ -1,4 +1,4 @@
-var appState = {
+export const appState = {
     balance: 500,
     transactions: [],
     income: 50,
