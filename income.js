@@ -1,4 +1,3 @@
-
 import { appState, loadAppState, saveAppState } from './variables.js';
 
 loadAppState();
@@ -42,11 +41,14 @@ function initIncomePage()
 
             document.getElementById('incomeDate').value = dateCell.textContent;
             document.getElementById('incomeSource').value = sourceCell.textContent;
-            document.getElementById('incomeAmount').value = amountCell.textContent;
+            document.getElementById('incomeAmount').value = amountCell.textContent.replace('$', '');
             document.getElementById('incomeNotes').value = notesCell.textContent;
+            const amountToRemove = parseFloat(amountCell.textContent.replace('$', '')) || 0;
+            appState.transactions = appState.transactions.filter(t => 
+                !(t.type === 'income' && t.date === dateCell.textContent && t.source === sourceCell.textContent && t.amount === amountToRemove)
+            );
 
-            const amountToRemove = parseFloat(row.cells[2].textContent);
-            appState.balance -= amountToRemove;
+            appState.syncExpenses();
 
             addButton.textContent = 'Update Income';
             editingRow = row;
@@ -56,8 +58,16 @@ function initIncomePage()
 
         if (button.classList.contains('deleteBtn')) 
         {
-            const amountToRemove = parseFloat(row.cells[2].textContent);
-            appState.balance -= amountToRemove;
+            const dateCell = row.cells[0];
+            const sourceCell = row.cells[1];
+            const amountCell = row.cells[2];
+            const amountToRemove = parseFloat(amountCell.textContent.replace('$', '')) || 0;
+
+            appState.transactions = appState.transactions.filter(t => 
+                !(t.type === 'income' && t.date === dateCell.textContent && t.source === sourceCell.textContent && t.amount === amountToRemove)
+            );
+
+            appState.syncExpenses();
 
             updateIncomeDisplay();
             
@@ -83,7 +93,16 @@ function initIncomePage()
 
         const amountValue = parseFloat(amount);
         
-        appState.balance += amountValue;
+        appState.transactions.push({
+            id: crypto.randomUUID(),
+            type: 'income',
+            date: date,
+            source: source,
+            amount: amountValue,
+            notes: notes
+        });
+
+        appState.syncExpenses();
 
         updateIncomeDisplay();
 
@@ -91,7 +110,7 @@ function initIncomePage()
         newRow.innerHTML = `
             <td>${date}</td>
             <td>${source}</td>
-            <td>${Number(amountValue).toFixed(2)}</td>
+            <td>$${Number(amountValue).toFixed(2)}</td>
             <td>${notes}</td>
             <td>
                 <button class="editBtn">Edit</button>
