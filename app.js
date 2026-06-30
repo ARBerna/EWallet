@@ -101,7 +101,7 @@ function initExpensesFeature() {
         totalAmountEl.innerText = `$${appState.balance.toFixed(2)}`;
         monthAmountEl.innerText = `$${appState.expenses.toFixed(2)}`;
 
-        const monthlyBudgetCap = 400.00;
+        const monthlyBudgetCap = appState.balance;
         if (appState.expenses > monthlyBudgetCap) {
             monthAmountEl.style.color = "#d9534f";
             monthAmountEl.innerText += " (Over Budget)";
