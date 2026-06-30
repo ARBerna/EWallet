@@ -25,24 +25,22 @@
     }
 };
 
-function saveAppState() {
+export function saveAppState() {
     localStorage.setItem('appState', JSON.stringify(appState));
 }
 
-function loadAppState() {
+export function loadAppState() {
     const saved = localStorage.getItem('appState');
     if (!saved) return;
 
     try {
         const parsed = JSON.parse(saved);
         if (parsed && typeof parsed === 'object') {
-            appState = Object.assign(appState, parsed);
-            window.appState = appState;
+            Object.assign(appState, parsed);
         }
     } catch (error) {
         console.log('Failed to load appState from localStorage:', error);
     }
 }
 
-loadAppState();
-window.appState = appState;
+//loadAppState();
