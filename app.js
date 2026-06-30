@@ -10,6 +10,7 @@ function escapeHTML(str) {
 document.addEventListener('DOMContentLoaded', () => {
     const hasExpenseView = !!document.getElementById('expenseForm');
     const hasPlanningView = !!document.getElementById('planningForm');
+    const hasIncomeView = !!document.getElementById('incomeForm');
 
     const accountModal = document.getElementById('accountCreationModal');
     const profileForm = document.getElementById('accountCreationForm');
@@ -58,6 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
         initExpensesFeature();
     } else if (hasPlanningView) {
         initPlanningFeature();
+    } else if (hasIncomeView) {
+        initIncomeFeature();
     }
 });
 
@@ -258,3 +261,92 @@ function initPlanningFeature() {
  
     }
 }
+
+function initIncomeFeature() {
+    const form = document.getElementById('incomeForm');
+    const tableBody = document.getElementById('incomeEntries');
+    const submitBtn = document.getElementById('addBtn');
+    
+    appState.loadExpenses();
+    renderIncomeUI();
+
+    form.addEventListener('submit', (ev) => {
+        ev.preventDefault();
+        const date = document.getElementById('incomeDate').value;
+        const source = document.getElementById('incomeSource').value;
+        const amount = parseFloat(document.getElementById('incomeAmount').value) || 0;
+        const notes = document.getElementById('incomeNotes').value;
+        const editId = form.dataset.editId;
+
+        if (editId) {
+            const idx = appState.transactions.findIndex(t => t.id === editId && t.type === 'income');
+            if (idx !== -1) {
+                appState.transactions[idx] = { id: editId, type: 'income', date, source, amount, notes };
+            }
+            delete form.dataset.editId;
+            if (submitBtn) submitBtn.textContent = 'Add Income';
+        } else {
+            const id = crypto.randomUUID();
+            appState.transactions.push({ id, type: 'income', date, source, amount, notes });
+        }
+
+        appState.syncExpenses();
+        if (typeof saveAppState === 'function') saveAppState();
+        
+        renderIncomeUI();
+        form.reset();
+    });
+
+    tableBody.addEventListener('click', (ev) => {
+        const actionBtn = ev.target.closest('button');
+        if (!actionBtn) return;
+
+        const row = actionBtn.closest('tr');
+        const id = row ? row.dataset.id : null;
+        if (!id) return;
+
+        if (actionBtn.classList.contains('editBtn') || actionBtn.textContent.trim() === 'Edit') {
+            const target = appState.transactions.find(t => t.id === id);
+            if (!target) return;
+
+            document.getElementById('incomeDate').value = target.date;
+            document.getElementById('incomeSource').value = target.source;
+            document.getElementById('incomeAmount').value = target.amount;
+            document.getElementById('incomeNotes').value = target.notes;
+
+            form.dataset.editId = id;
+            if (submitBtn) submitBtn.textContent = 'Update Income';
+            
+        } else if (actionBtn.classList.contains('deleteBtn') || actionBtn.textContent.trim() === 'Delete') {
+            appState.transactions = appState.transactions.filter(t => t.id !== id);
+            
+            appState.syncExpenses();
+            if (typeof saveAppState === 'function') saveAppState();
+            
+            renderIncomeUI();
+        }
+    });
+
+    function renderIncomeUI() {
+        const incomes = appState.transactions.filter(t => t.type === 'income');
+    
+        tableBody.innerHTML = incomes.map(i => `
+            <tr data-id="${i.id}">
+                <td>${escapeHTML(i.date)}</td>
+                <td>${escapeHTML(i.source)}</td>
+                <td>$${i.amount.toFixed(2)}</td>
+                <td>${escapeHTML(i.notes)}</td>
+                <td>
+                    <button class="editBtn">Edit</button>
+                    <button class="deleteBtn">Delete</button>
+                </td>
+            </tr>
+        `).join('');
+
+        const displayEl = document.getElementById('incomeDisplay');
+        if (displayEl) {
+            displayEl.textContent = '$' + appState.balance.toFixed(2);
+        }
+    }
+}
+
