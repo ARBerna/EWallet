@@ -1,4 +1,4 @@
- export const appState = {
+export const appState = {
     balance: 500.00,
     transactions: [], 
     income: 50.00,
@@ -37,7 +37,6 @@
         this.transactions.forEach(t => {
             const amount = parseFloat(t.amount) || 0;
 
-            // FIXED: Process transaction data dynamically while cross-checking the local date month string safely
             if (t.type === 'income') {
                 runningBalance += amount;
                 if (t.date && t.date.startsWith(currentMonthStr)) {
@@ -58,18 +57,18 @@
 };
 
 
-function saveAppState() {
+export function saveAppState() {
     localStorage.setItem('appState', JSON.stringify(appState));
 }
 
-function loadAppState() {
+export function loadAppState() {
     const saved = localStorage.getItem('appState');
     if (!saved) return;
 
     try {
         const parsed = JSON.parse(saved);
         if (parsed && typeof parsed === 'object') {
-
+            // Safe manual assignment avoids runtime reference pointer engine exceptions
             if (parsed.transactions) appState.transactions = parsed.transactions;
             appState.updateTotals();
             window.appState = appState;

@@ -1,21 +1,40 @@
 
-    import { appState } from '../variables.js';
-    
+import { appState, loadAppState, saveAppState } from './variables.js';
+
+loadAppState();
+
+let editingRow = null;
+
+function updateIncomeDisplay() 
+{
+    const display = document.getElementById('incomeDisplay');
+    if (display) {
+        display.textContent = '$' + appState.balance.toFixed(2);
+    }
+}
+
+function initIncomePage() 
+{
+    updateIncomeDisplay();
+
     const incomeEntries = document.getElementById('incomeEntries');
     const addButton = document.getElementById('addBtn');
-    let editingRow = null;
+    const incomeForm = document.getElementById('incomeForm');
 
-    function updateIncomeDisplay() {
-        document.getElementById('incomeDisplay').textContent = '$' + appState.balance.toFixed(2);
+    if (!incomeEntries || !addButton || !incomeForm) {
+        return;
     }
 
     incomeEntries.addEventListener('click', (event) => 
     {
-        const target = event.target;
-        
-        if (target.classList.contains('editBtn')) 
+        const button = event.target.closest('button');
+        if (!button) return;
+
+        const row = button.closest('tr');
+        if (!row) return;
+
+        if (button.classList.contains('editBtn')) 
         {
-            const row = target.closest('tr');
             const dateCell = row.cells[0];
             const sourceCell = row.cells[1];
             const amountCell = row.cells[2];
@@ -33,23 +52,23 @@
             editingRow = row;
             row.remove();
             updateIncomeDisplay();
-            saveAppState();
         }
 
-        if (target.classList.contains('deleteBtn')) {
-            const row = target.closest('tr');
-
+        if (button.classList.contains('deleteBtn')) 
+        {
             const amountToRemove = parseFloat(row.cells[2].textContent);
             appState.balance -= amountToRemove;
 
             updateIncomeDisplay();
-            saveAppState();
-
+            
             row.remove();
         }
+
+        saveAppState();
     });
 
-    function submitForm(event) {
+    incomeForm.addEventListener('submit', (event) => 
+    {
         event.preventDefault();
 
         const date = document.getElementById('incomeDate').value;
@@ -62,16 +81,17 @@
             return false;
         }
 
-        appState.balance += parseFloat(amount);
-        updateIncomeDisplay();
-        saveAppState();
+        const amountValue = parseFloat(amount);
+        
+        appState.balance += amountValue;
 
-        const tbody = document.getElementById('incomeEntries');
+        updateIncomeDisplay();
+
         const newRow = document.createElement('tr');
         newRow.innerHTML = `
             <td>${date}</td>
             <td>${source}</td>
-            <td>${Number(amount).toFixed(2)}</td>
+            <td>${Number(amountValue).toFixed(2)}</td>
             <td>${notes}</td>
             <td>
                 <button class="editBtn">Edit</button>
@@ -79,7 +99,7 @@
             </td>
         `;
 
-        tbody.appendChild(newRow);
+        incomeEntries.appendChild(newRow);
         editingRow = null;
         addButton.textContent = 'Add Income';
         document.getElementById('incomeDate').value = '';
@@ -87,8 +107,10 @@
         document.getElementById('incomeAmount').value = '';
         document.getElementById('incomeNotes').value = '';
 
-        return false;
-    }
+        saveAppState();
 
-    document.getElementById('incomeForm').addEventListener('submit', submitForm);
-    updateIncomeDisplay();
+        return false;
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initIncomePage);
